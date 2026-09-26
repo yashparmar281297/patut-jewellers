@@ -5,7 +5,8 @@ import ProductCard from "@/components/ProductCard";
 import Reveal from "@/components/Reveal";
 import TiltCard from "@/components/TiltCard";
 import JewelCanvas from "@/components/three/JewelCanvas";
-import { categories, metals, products, type CategorySlug } from "@/lib/catalog";
+import { categories, metals, type CategorySlug } from "@/lib/catalog";
+import { getNewArrivals } from "@/lib/products";
 import { site } from "@/lib/site";
 
 function SectionHeading({ eyebrow, title, light = false }: { eyebrow: string; title: React.ReactNode; light?: boolean }) {
@@ -24,11 +25,6 @@ function SectionHeading({ eyebrow, title, light = false }: { eyebrow: string; ti
   );
 }
 
-const newArrivals = [
-  ...products.filter((p) => p.isNew && p.metal === "gold").slice(0, 2),
-  ...products.filter((p) => p.isNew && p.metal === "diamond").slice(2, 4),
-];
-
 const bridalPieces: CategorySlug[] = ["necklace", "jhumka", "bangles", "mangalsutra"];
 
 const promises = [
@@ -38,7 +34,12 @@ const promises = [
   { title: "Bespoke Design", text: "Bring an idea or an heirloom — our karigars will shape it for you." },
 ];
 
-export default function Home() {
+// Rebuild at most every 5 minutes; saving in the admin panel refreshes immediately.
+export const revalidate = 300;
+
+export default async function Home() {
+  const newArrivals = await getNewArrivals();
+
   const contactHref = site.whatsapp
     ? `https://wa.me/${site.whatsapp}?text=${encodeURIComponent("Hello Patut Jewellers, I would like to book a visit.")}`
     : site.phone

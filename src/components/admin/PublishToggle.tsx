@@ -1,0 +1,38 @@
+"use client";
+
+import { useOptimistic, useTransition } from "react";
+import { setPublished } from "@/app/admin/actions";
+
+export default function PublishToggle({ id, published }: { id: string; published: boolean }) {
+  const [isPending, startTransition] = useTransition();
+  const [optimistic, setOptimistic] = useOptimistic(published);
+
+  function toggle() {
+    startTransition(async () => {
+      setOptimistic(!optimistic);
+      const result = await setPublished(id, !optimistic);
+      if (!result.ok) alert(result.error ?? "Could not update.");
+    });
+  }
+
+  return (
+    <button
+      type="button"
+      role="switch"
+      aria-checked={optimistic}
+      onClick={toggle}
+      disabled={isPending}
+      title={optimistic ? "Visible on the website" : "Hidden from the website"}
+      className="flex shrink-0 items-center gap-2 text-xs text-muted"
+    >
+      <span className={`relative h-6 w-11 rounded-full transition-colors ${optimistic ? "bg-gold" : "bg-sand"}`}>
+        <span
+          className={`absolute top-0.5 h-5 w-5 rounded-full bg-white shadow transition-transform ${
+            optimistic ? "translate-x-5.5" : "translate-x-0.5"
+          }`}
+        />
+      </span>
+      <span className="hidden w-14 text-left lg:inline">{optimistic ? "Live" : "Hidden"}</span>
+    </button>
+  );
+}

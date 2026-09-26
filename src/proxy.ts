@@ -5,8 +5,7 @@ export async function proxy(request: NextRequest) {
   return updateSession(request);
 }
 
+// Only the admin area uses sign-in sessions; storefront pages stay cacheable.
 export const config = {
-  matcher: [
-    "/((?!_next/static|_next/image|favicon.ico|.*\.(?:svg|png|jpg|jpeg|gif|webp)$).*)",
-  ],
+  matcher: ["/admin/:path*"],
 };

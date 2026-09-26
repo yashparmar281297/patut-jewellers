@@ -26,16 +26,20 @@ export interface Category {
 }
 
 export interface Product {
+  id: string;
   slug: string;
   name: string;
   metal: MetalSlug;
   category: CategorySlug;
   purity: string;
   weight: number;
-  diamondCarat?: number;
-  isNew?: boolean;
-  isBestseller?: boolean;
+  diamondCarat: number | null;
   description: string;
+  /** Public image URLs, cover first. */
+  images: string[];
+  isNew: boolean;
+  isBestseller: boolean;
+  isPublished: boolean;
 }
 
 export const metals: Metal[] = [
@@ -69,75 +73,9 @@ export const categories: Category[] = [
   { slug: "bracelet", name: "Bracelet", blurb: "Tennis, charm and cuff bracelets" },
 ];
 
-const goldNames: Record<CategorySlug, string[]> = {
-  "ladies-ring": ["Aarohi Floral Band", "Meera Twist Ring", "Kesar Petal Ring", "Sanvi Filigree Ring"],
-  "gents-ring": ["Rajvansh Signet", "Veer Textured Band", "Samrat Classic Ring", "Arjun Matte Band"],
-  necklace: ["Rani Haar", "Padmini Choker", "Nakshi Temple Set", "Kundan Layered Necklace"],
-  earring: ["Chandra Drops", "Tara Studs", "Leela Chandbali", "Noor Hoops"],
-  jhumka: ["Mayur Jhumka", "Ghungroo Jhumka", "Shringar Temple Jhumka", "Kamal Jhumka"],
-  bangles: ["Rajwadi Kada", "Laxmi Bangle Pair", "Nakashi Bangles", "Antique Pola Kada"],
-  chain: ["Rope Chain", "Hollow Box Chain", "Singapore Chain", "Cuban Link Chain"],
-  mangalsutra: ["Saubhagya Mangalsutra", "Vati Mangalsutra", "Nitya Short Mangalsutra", "Parampara Long Mangalsutra"],
-  bracelet: ["Kadli Bracelet", "Mesh Bracelet", "Charm Bracelet", "Nazariya Bracelet"],
-};
+export const purities = ["24K", "22K", "18K", "14K"] as const;
 
-const diamondNames: Record<CategorySlug, string[]> = {
-  "ladies-ring": ["Solitaire Eternity", "Halo Promise Ring", "Pavé Crown Ring", "Marquise Bloom Ring"],
-  "gents-ring": ["Onyx Diamond Signet", "Channel-Set Band", "Prince Solitaire", "Baguette Row Ring"],
-  necklace: ["Rivière Necklace", "Celestial Pendant Set", "Floral Diamond Choker", "Bridal Diamond Haar"],
-  earring: ["Solitaire Studs", "Cluster Drops", "Halo Studs", "Diamond Ear Cuffs"],
-  jhumka: ["Polki Diamond Jhumka", "Chandelier Jhumka", "Pavé Bell Jhumka", "Uncut Diamond Jhumka"],
-  bangles: ["Eternity Bangle", "Diamond Kada", "Twisted Pavé Bangle", "Bridal Diamond Bangles"],
-  chain: ["Diamond Station Chain", "Pavé Link Chain", "Solitaire Drop Chain", "Diamond Box Chain"],
-  mangalsutra: ["Solitaire Mangalsutra", "Diamond Vati Mangalsutra", "Infinity Mangalsutra", "Floral Diamond Mangalsutra"],
-  bracelet: ["Tennis Bracelet", "Diamond Bangle Bracelet", "Flexi Pavé Bracelet", "Solitaire Chain Bracelet"],
-};
-
-const baseWeight: Record<CategorySlug, number> = {
-  "ladies-ring": 3.2,
-  "gents-ring": 6.8,
-  necklace: 28.5,
-  earring: 4.6,
-  jhumka: 9.4,
-  bangles: 22.0,
-  chain: 12.5,
-  mangalsutra: 10.8,
-  bracelet: 9.6,
-};
-
-function slugify(value: string) {
-  return value.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
-}
-
-function buildProducts(): Product[] {
-  const products: Product[] = [];
-  for (const metal of metals) {
-    const names = metal.slug === "gold" ? goldNames : diamondNames;
-    for (const category of categories) {
-      names[category.slug].forEach((name, index) => {
-        const weight = +(baseWeight[category.slug] * (0.8 + index * 0.18)).toFixed(2);
-        products.push({
-          slug: slugify(`${metal.slug}-${name}`),
-          name,
-          metal: metal.slug,
-          category: category.slug,
-          purity: metal.slug === "gold" ? (index % 3 === 2 ? "18K" : "22K") : "18K",
-          weight,
-          diamondCarat: metal.slug === "diamond" ? +(0.25 + index * 0.22).toFixed(2) : undefined,
-          isNew: index === 0,
-          isBestseller: index === 1,
-          description:
-            metal.slug === "gold"
-              ? `A ${category.name.toLowerCase()} hand-finished in hallmarked gold, with the warm lustre and fine detailing Patut Jewellers is known for.`
-              : `A ${category.name.toLowerCase()} set with certified natural diamonds in 18K gold, crafted to catch light from every angle.`,
-        });
-      });
-    }
-  }
-  return products;
-}
-
-export const products: Product[] = buildProducts();
+export const PRODUCT_IMAGE_BUCKET = "product-images";
 
 export function getMetal(slug: string) {
   return metals.find((m) => m.slug === slug);
@@ -147,12 +85,16 @@ export function getCategory(slug: string) {
   return categories.find((c) => c.slug === slug);
 }
 
-export function getProduct(slug: string) {
-  return products.find((p) => p.slug === slug);
+export function slugify(value: string) {
+  return value
+    .normalize("NFD")
+    .replace(/[̀-ͯ]/g, "")
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/(^-|-$)/g, "");
 }
 
-export function getProducts(metal?: MetalSlug, category?: CategorySlug) {
-  return products.filter(
-    (p) => (!metal || p.metal === metal) && (!category || p.category === category),
-  );
+/** Public URL for an object stored in the product image bucket. */
+export function productImageUrl(path: string) {
+  return `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/${PRODUCT_IMAGE_BUCKET}/${path}`;
 }

@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import JewelIcon from "@/components/JewelIcon";
 import TiltCard from "@/components/TiltCard";
@@ -6,6 +7,7 @@ import { getCategory, type Product } from "@/lib/catalog";
 export default function ProductCard({ product }: { product: Product }) {
   const category = getCategory(product.category);
   const isDiamond = product.metal === "diamond";
+  const [cover, hover] = product.images;
 
   return (
     <Link href={`/product/${product.slug}`} className="group block">
@@ -17,20 +19,47 @@ export default function ProductCard({ product }: { product: Product }) {
               : "bg-[radial-gradient(circle_at_50%_35%,#fffaf0,#f1e5d0_50%,#e2cda7)]"
           }`}
         >
-          <div className="absolute inset-x-8 bottom-8 h-6 rounded-full bg-noir/10 blur-xl" />
-          <JewelIcon
-            category={product.category}
-            metal={product.metal}
-            className={`absolute inset-0 m-auto h-3/5 w-3/5 transition-transform duration-700 ease-[var(--ease-luxe)] [transform:translateZ(40px)] group-hover:scale-110 ${
-              isDiamond ? "text-[#8b8f97]" : "text-gold"
-            }`}
-          />
+          {cover ? (
+            <>
+              <Image
+                src={cover}
+                alt={product.name}
+                fill
+                sizes="(min-width: 1024px) 25vw, 50vw"
+                className="object-cover transition-transform duration-1000 ease-[var(--ease-luxe)] group-hover:scale-105"
+              />
+              {hover && (
+                <Image
+                  src={hover}
+                  alt=""
+                  fill
+                  sizes="(min-width: 1024px) 25vw, 50vw"
+                  className="object-cover opacity-0 transition-opacity duration-700 group-hover:opacity-100"
+                />
+              )}
+            </>
+          ) : (
+            <>
+              <div className="absolute inset-x-8 bottom-8 h-6 rounded-full bg-noir/10 blur-xl" />
+              <JewelIcon
+                category={product.category}
+                metal={product.metal}
+                className={`absolute inset-0 m-auto h-3/5 w-3/5 transition-transform duration-700 ease-[var(--ease-luxe)] [transform:translateZ(40px)] group-hover:scale-110 ${
+                  isDiamond ? "text-[#8b8f97]" : "text-gold"
+                }`}
+              />
+            </>
+          )}
           {(product.isNew || product.isBestseller) && (
             <span className="absolute left-4 top-4 rounded-full bg-noir/85 px-3 py-1 font-caps text-[9px] tracking-[0.25em] text-gold-light">
               {product.isNew ? "New" : "Bestseller"}
             </span>
           )}
-          <span className="absolute right-4 top-4 font-caps text-[10px] tracking-[0.2em] text-ink/60">
+          <span
+            className={`absolute right-4 top-4 font-caps text-[10px] tracking-[0.2em] ${
+              cover ? "rounded-full bg-ivory/85 px-2.5 py-1 text-ink" : "text-ink/60"
+            }`}
+          >
             {product.purity}
           </span>
         </div>

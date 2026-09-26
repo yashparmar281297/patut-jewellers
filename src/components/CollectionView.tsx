@@ -2,15 +2,15 @@ import Link from "next/link";
 import JewelIcon from "@/components/JewelIcon";
 import ProductCard from "@/components/ProductCard";
 import Reveal from "@/components/Reveal";
-import { categories, getProducts, metals, type Category, type Metal } from "@/lib/catalog";
+import { categories, metals, type Category, type Metal, type Product } from "@/lib/catalog";
 
 interface Props {
   metal: Metal;
   category?: Category;
+  products: Product[];
 }
 
-export default function CollectionView({ metal, category }: Props) {
-  const items = getProducts(metal.slug, category?.slug);
+export default function CollectionView({ metal, category, products: items }: Props) {
   const isGold = metal.slug === "gold";
   const otherMetal = metals.find((m) => m.slug !== metal.slug)!;
 
@@ -91,13 +91,26 @@ export default function CollectionView({ metal, category }: Props) {
         <p className="text-sm text-muted">
           {items.length} {items.length === 1 ? "design" : "designs"}
         </p>
-        <div className="mt-8 grid grid-cols-2 gap-x-4 gap-y-12 sm:gap-x-6 lg:grid-cols-4">
-          {items.map((product, i) => (
-            <Reveal key={product.slug} delay={(i % 4) * 80}>
-              <ProductCard product={product} />
-            </Reveal>
-          ))}
-        </div>
+        {items.length > 0 ? (
+          <div className="mt-8 grid grid-cols-2 gap-x-4 gap-y-12 sm:gap-x-6 lg:grid-cols-4">
+            {items.map((product, i) => (
+              <Reveal key={product.slug} delay={(i % 4) * 80}>
+                <ProductCard product={product} />
+              </Reveal>
+            ))}
+            </div>
+        ) : (
+          <div className="mt-8 flex flex-col items-center rounded-3xl border border-dashed border-gold/40 px-6 py-20 text-center">
+            <JewelIcon category={category?.slug ?? "necklace"} metal={metal.slug} className="h-24 w-24 text-gold/70" />
+            <p className="mt-6 font-display text-3xl text-ink">New designs arriving soon</p>
+            <p className="mt-2 max-w-sm text-sm text-muted">
+              Visit our showroom to see the full {metal.name.toLowerCase()} collection in person.
+            </p>
+            <Link href="/#visit" className="mt-6 font-caps text-[11px] tracking-[0.25em] text-gold-deep underline underline-offset-8">
+              Book a visit
+            </Link>
+          </div>
+        )}
 
         {category && (
           <div className="mt-24 rounded-3xl border border-gold/20 bg-cream p-8 text-center sm:p-12">

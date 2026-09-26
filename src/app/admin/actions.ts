@@ -1,0 +1,168 @@
+"use server";
+
+import { revalidatePath } from "next/cache";
+import { redirect } from "next/navigation";
+import { z } from "zod";
+import { requireAdmin } from "@/lib/admin";
+import { categories, metals, PRODUCT_IMAGE_BUCKET, purities } from "@/lib/catalog";
+import { createClient } from "@/lib/supabase/server";
+
+const productSchema = z.object({
+  id: z.uuid().optional(),
+  name: z.string().trim().min(1, "Name is required").max(120),
+  slug: z
+    .string()
+    .trim()
+    .regex(/^[a-z0-9]+(-[a-z0-9]+)*$/, "Use lowercase letters, numbers and single hyphens only"),
+  metal: z.enum(metals.map((m) => m.slug) as [string, ...string[]]),
+  category: z.enum(categories.map((c) => c.slug) as [string, ...string[]]),
+  purity: z.enum(purities),
+  weight: z.number({ error: "Enter the weight in grams" }).positive("Weight must be more than 0").max(10000),
+  diamondCarat: z.number().positive("Carat must be more than 0").max(1000).nullable(),
+  description: z.string().trim().max(2000),
+  images: z
+    .array(z.string().regex(/^products\/[a-z0-9-]+\.(webp|jpe?g|png|avif)$/i, "Invalid image path"))
+    .max(12, "Up to 12 photos per product"),
+  isNew: z.boolean(),
+  isBestseller: z.boolean(),
+  isPublished: z.boolean(),
+  sortOrder: z.number().int().min(0).max(9999),
+});
+
+export type ProductInput = z.input<typeof productSchema>;
+
+export type SaveResult =
+  | { ok: true; id: string }
+  | { ok: false; error: string; fieldErrors?: Record<string, string> };
+
+function refreshStorefront() {
+  // Every storefront page lists products, so refresh them all.
+  revalidatePath("/", "layout");
+}
+
+export async function saveProduct(input: ProductInput): Promise<SaveResult> {
+  const parsed = productSchema.safeParse(input);
+  if (!parsed.success) {
+    const fieldErrors: Record<string, string> = {};
+    for (const issue of parsed.error.issues) {
+      const key = String(issue.path[0] ?? "form");
+      fieldErrors[key] ??= issue.message;
+    }
+    return { ok: false, error: "Please fix the highlighted fields.", fieldErrors };
+  }
+
+  let supabase;
+  try {
+    ({ supabase } = await requireAdmin());
+  } catch (error) {
+    return { ok: false, error: (error as Error).message };
+  }
+
+  const p = parsed.data;
+  const row = {
+    name: p.name,
+    slug: p.slug,
+    metal: p.metal,
+    category: p.category,
+    purity: p.purity,
+    weight: p.weight,
+    diamond_carat: p.diamondCarat,
+    description: p.description,
+    images: p.images,
+    is_new: p.isNew,
+    is_bestseller: p.isBestseller,
+    is_published: p.isPublished,
+    sort_order: p.sortOrder,
+  };
+
+  let previousImages: string[] = [];
+  let id = p.id;
+
+  if (id) {
+    const { data: existing, error: loadError } = await supabase
+      .from("products")
+      .select("images")
+      .eq("id", id)
+      .maybeSingle();
+    if (loadError) return { ok: false, error: loadError.message };
+    if (!existing) return { ok: false, error: "This product no longer exists." };
+    previousImages = existing.images;
+
+    const { error } = await supabase.from("products").update(row).eq("id", id);
+    if (error) return saveError(error);
+  } else {
+    const { data, error } = await supabase.from("products").insert(row).select("id").single();
+    if (error) return saveError(error);
+    id = data.id;
+  }
+
+  // Delete photos that were removed from the product.
+  const removed = previousImages.filter((path) => !p.images.includes(path));
+  if (removed.length > 0) {
+    await supabase.storage.from(PRODUCT_IMAGE_BUCKET).remove(removed);
+  }
+
+  refreshStorefront();
+  return { ok: true, id };
+}
+
+function saveError(error: { code?: string; message: string }): SaveResult {
+  if (error.code === "23505") {
+    return {
+      ok: false,
+      error: "Another product already uses this web address.",
+      fieldErrors: { slug: "Already in use — choose a different one" },
+    };
+  }
+  return { ok: false, error: error.message };
+}
+
+export async function deleteProduct(id: string): Promise<{ ok: boolean; error?: string }> {
+  if (!z.uuid().safeParse(id).success) return { ok: false, error: "Invalid product." };
+
+  let supabase;
+  try {
+    ({ supabase } = await requireAdmin());
+  } catch (error) {
+    return { ok: false, error: (error as Error).message };
+  }
+
+  const { data: deleted, error } = await supabase
+    .from("products")
+    .delete()
+    .eq("id", id)
+    .select("images")
+    .maybeSingle();
+  if (error) return { ok: false, error: error.message };
+
+  if (deleted && deleted.images.length > 0) {
+    await supabase.storage.from(PRODUCT_IMAGE_BUCKET).remove(deleted.images);
+  }
+
+  refreshStorefront();
+  return { ok: true };
+}
+
+export async function setPublished(id: string, isPublished: boolean): Promise<{ ok: boolean; error?: string }> {
+  if (!z.uuid().safeParse(id).success) return { ok: false, error: "Invalid product." };
+
+  let supabase;
+  try {
+    ({ supabase } = await requireAdmin());
+  } catch (error) {
+    return { ok: false, error: (error as Error).message };
+  }
+
+  const { error } = await supabase.from("products").update({ is_published: isPublished }).eq("id", id);
+  if (error) return { ok: false, error: error.message };
+
+  refreshStorefront();
+  revalidatePath("/admin");
+  return { ok: true };
+}
+
+export async function signOut() {
+  const supabase = await createClient();
+  await supabase.auth.signOut();
+  redirect("/admin/login");
+}

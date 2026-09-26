@@ -3,29 +3,34 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import JewelIcon from "@/components/JewelIcon";
 import ProductCard from "@/components/ProductCard";
+import ProductGallery from "@/components/ProductGallery";
 import TiltCard from "@/components/TiltCard";
-import { getCategory, getMetal, getProduct, getProducts, products } from "@/lib/catalog";
+import { getCategory, getMetal } from "@/lib/catalog";
+import { getProduct, getProductSlugs, getProducts } from "@/lib/products";
 import { site } from "@/lib/site";
 
-export function generateStaticParams() {
-  return products.map((p) => ({ slug: p.slug }));
+export const revalidate = 300;
+
+export async function generateStaticParams() {
+  const slugs = await getProductSlugs();
+  return slugs.map((slug) => ({ slug }));
 }
 
 export async function generateMetadata(props: PageProps<"/product/[slug]">): Promise<Metadata> {
   const { slug } = await props.params;
-  const product = getProduct(slug);
-  return product ? { title: product.name, description: product.description } : {};
+  const product = await getProduct(slug);
+  return product ? { title: product.name, description: product.description, openGraph: product.images[0] ? { images: [product.images[0]] } : undefined } : {};
 }
 
 export default async function ProductPage(props: PageProps<"/product/[slug]">) {
   const { slug } = await props.params;
-  const product = getProduct(slug);
+  const product = await getProduct(slug);
   if (!product) notFound();
 
   const metal = getMetal(product.metal)!;
   const category = getCategory(product.category)!;
   const isDiamond = product.metal === "diamond";
-  const related = getProducts(product.metal, product.category).filter((p) => p.slug !== product.slug);
+  const related = (await getProducts(product.metal, product.category)).filter((p) => p.slug !== product.slug);
 
   const specs = [
     ["Metal", isDiamond ? "18K Gold" : `${product.purity} Gold`],
@@ -45,27 +50,31 @@ export default async function ProductPage(props: PageProps<"/product/[slug]">) {
   return (
     <>
       <section className="mx-auto grid max-w-7xl gap-12 px-4 py-12 sm:px-6 lg:grid-cols-2 lg:gap-20 lg:px-10 lg:py-20">
-        <div className="group">
-          <TiltCard max={8} className="rounded-[2rem]">
-            <div
-              className={`sheen relative aspect-square overflow-hidden rounded-[2rem] ${
-                isDiamond
-                  ? "bg-[radial-gradient(circle_at_50%_35%,#ffffff,#eef0f3_45%,#cfd4db)]"
-                  : "bg-[radial-gradient(circle_at_50%_35%,#fffaf0,#f1e5d0_50%,#dcc39a)]"
-              }`}
-            >
-              <div className="absolute inset-x-16 bottom-14 h-10 rounded-full bg-noir/15 blur-2xl" />
-              <JewelIcon
-                category={product.category}
-                metal={product.metal}
-                className={`animate-float absolute inset-0 m-auto h-3/5 w-3/5 [transform:translateZ(60px)] ${
-                  isDiamond ? "text-[#8b8f97]" : "text-gold"
+        {product.images.length > 0 ? (
+          <ProductGallery images={product.images} name={product.name} />
+        ) : (
+          <div className="group">
+            <TiltCard max={8} className="rounded-[2rem]">
+              <div
+                className={`sheen relative aspect-square overflow-hidden rounded-[2rem] ${
+                  isDiamond
+                    ? "bg-[radial-gradient(circle_at_50%_35%,#ffffff,#eef0f3_45%,#cfd4db)]"
+                    : "bg-[radial-gradient(circle_at_50%_35%,#fffaf0,#f1e5d0_50%,#dcc39a)]"
                 }`}
-              />
-              <span className="animate-twinkle absolute right-[22%] top-[20%] text-2xl text-gold-light">✦</span>
-            </div>
-          </TiltCard>
-        </div>
+              >
+                <div className="absolute inset-x-16 bottom-14 h-10 rounded-full bg-noir/15 blur-2xl" />
+                <JewelIcon
+                  category={product.category}
+                  metal={product.metal}
+                  className={`animate-float absolute inset-0 m-auto h-3/5 w-3/5 [transform:translateZ(60px)] ${
+                    isDiamond ? "text-[#8b8f97]" : "text-gold"
+                  }`}
+                />
+                <span className="animate-twinkle absolute right-[22%] top-[20%] text-2xl text-gold-light">✦</span>
+              </div>
+            </TiltCard>
+          </div>
+        )}
 
         <div className="flex flex-col justify-center">
           <nav className="font-caps text-[10px] tracking-[0.3em] text-muted">
@@ -124,7 +133,7 @@ export default async function ProductPage(props: PageProps<"/product/[slug]">) {
               More {metal.name} <em className="text-gilded">{category.name}</em>
             </h2>
             <div className="mt-12 grid grid-cols-2 gap-x-4 gap-y-12 sm:gap-x-6 lg:grid-cols-3">
-              {related.map((p) => (
+              {related.slice(0, 6).map((p) => (
                 <ProductCard key={p.slug} product={p} />
               ))}
             </div>

@@ -2,6 +2,9 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import CollectionView from "@/components/CollectionView";
 import { categories, getCategory, getMetal, metals } from "@/lib/catalog";
+import { getProducts } from "@/lib/products";
+
+export const revalidate = 300;
 
 export function generateStaticParams() {
   return metals.flatMap((m) => categories.map((c) => ({ metal: m.slug, category: c.slug })));
@@ -19,5 +22,6 @@ export default async function CategoryPage(props: PageProps<"/collections/[metal
   const m = getMetal(metal);
   const c = getCategory(category);
   if (!m || !c) notFound();
-  return <CollectionView metal={m} category={c} />;
+  const products = await getProducts(m.slug, c.slug);
+  return <CollectionView metal={m} category={c} products={products} />;
 }
