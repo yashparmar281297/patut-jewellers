@@ -88,13 +88,13 @@ export function getCategory(slug: string) {
 export function slugify(value: string) {
   return value
     .normalize("NFD")
-    .replace(/[̀-ͯ]/g, "")
+    .replace(/[\u0300-\u036f]/g, "")
     .toLowerCase()
     .replace(/[^a-z0-9]+/g, "-")
     .replace(/(^-|-$)/g, "");
 }
 
-/** Public URL for an object stored in the product image bucket. */
-export function productImageUrl(path: string) {
+/** Public URL for an object in the site image bucket (products/, offers/, testimonials/). */
+export function mediaUrl(path: string) {
   return `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/${PRODUCT_IMAGE_BUCKET}/${path}`;
 }

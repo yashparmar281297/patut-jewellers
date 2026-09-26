@@ -19,12 +19,12 @@ export default function CollectionView({ metal, category, products: items }: Pro
       <section
         className={`grain relative overflow-hidden ${
           isGold
-            ? "bg-[radial-gradient(ellipse_at_75%_40%,#e9c67c,#b8893b_35%,#5a3e14_75%,#241709)] text-noir"
-            : "bg-[radial-gradient(ellipse_at_75%_40%,#ffffff,#cfd4db_30%,#4b515c_70%,#14161a)] text-ivory"
+            ? "bg-[radial-gradient(ellipse_at_75%_40%,#fff6dc,#ecd08f_35%,#d3a95a_75%,#bb8c3c)] text-ink"
+            : "bg-[radial-gradient(ellipse_at_75%_40%,#ffffff,#eef1f4_35%,#cfd5dd_75%,#b9c1cb)] text-ink"
         }`}
       >
-        <div className="relative mx-auto flex max-w-7xl flex-col gap-8 px-4 py-16 sm:px-6 md:flex-row md:items-center md:justify-between lg:px-10 lg:py-24">
-          <div className={isGold ? "" : "md:text-ivory"}>
+        <div className="relative mx-auto flex max-w-7xl flex-col gap-6 px-4 py-10 sm:px-6 sm:py-16 md:flex-row md:items-center md:justify-between lg:px-10 lg:py-24">
+          <div className="text-center md:text-left">
             <nav className="font-caps text-[10px] tracking-[0.3em] opacity-70">
               <Link href="/" className="hover:underline">Home</Link>
               <span className="mx-2">/</span>
@@ -36,7 +36,7 @@ export default function CollectionView({ metal, category, products: items }: Pro
                 </>
               )}
             </nav>
-            <h1 className="mt-5 font-display text-5xl font-light sm:text-7xl">
+            <h1 className="mt-4 font-display text-[2.6rem] font-light leading-tight sm:mt-5 sm:text-7xl">
               {category ? (
                 <>
                   {metal.name} <em>{category.name}</em>
@@ -47,7 +47,7 @@ export default function CollectionView({ metal, category, products: items }: Pro
                 </>
               )}
             </h1>
-            <p className="mt-4 max-w-lg text-base leading-relaxed opacity-80">
+            <p className="mx-auto mt-3 max-w-lg text-[15px] leading-relaxed opacity-80 sm:text-base md:mx-0">
               {category
                 ? `${category.blurb}, crafted in ${isGold ? "BIS hallmarked 22K and 18K gold" : "certified natural diamonds and 18K gold"}.`
                 : metal.description}
@@ -56,7 +56,7 @@ export default function CollectionView({ metal, category, products: items }: Pro
           <JewelIcon
             category={category?.slug ?? (isGold ? "necklace" : "ladies-ring")}
             metal={metal.slug}
-            className={`animate-float h-40 w-40 shrink-0 self-center sm:h-56 sm:w-56 ${isGold ? "text-noir/70" : "text-ivory"}`}
+            className={`animate-float h-28 w-28 shrink-0 self-center sm:h-56 sm:w-56 ${isGold ? "text-[#6f4c14]" : "text-[#4a515c]"}`}
           />
         </div>
       </section>

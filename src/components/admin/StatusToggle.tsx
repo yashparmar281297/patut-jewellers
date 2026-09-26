@@ -1,17 +1,26 @@
 "use client";
 
 import { useOptimistic, useTransition } from "react";
-import { setPublished } from "@/app/admin/actions";
+import type { ActionResult } from "@/lib/admin";
 
-export default function PublishToggle({ id, published }: { id: string; published: boolean }) {
+interface Props {
+  id: string;
+  value: boolean;
+  action: (id: string, value: boolean) => Promise<ActionResult>;
+  onLabel?: string;
+  offLabel?: string;
+}
+
+/** Live/Hidden switch that saves immediately. */
+export default function StatusToggle({ id, value, action, onLabel = "Live", offLabel = "Hidden" }: Props) {
   const [isPending, startTransition] = useTransition();
-  const [optimistic, setOptimistic] = useOptimistic(published);
+  const [optimistic, setOptimistic] = useOptimistic(value);
 
   function toggle() {
     startTransition(async () => {
       setOptimistic(!optimistic);
-      const result = await setPublished(id, !optimistic);
-      if (!result.ok) alert(result.error ?? "Could not update.");
+      const result = await action(id, !optimistic);
+      if (!result.ok) alert(result.error);
     });
   }
 
@@ -32,7 +41,7 @@ export default function PublishToggle({ id, published }: { id: string; published
           }`}
         />
       </span>
-      <span className="hidden w-14 text-left lg:inline">{optimistic ? "Live" : "Hidden"}</span>
+      <span className="w-12 text-left">{optimistic ? onLabel : offLabel}</span>
     </button>
   );
 }

@@ -3,22 +3,20 @@
 import { useRouter } from "next/navigation";
 import { useRef, useState, useTransition } from "react";
 import JewelIcon from "@/components/JewelIcon";
-import { deleteProduct, saveProduct, type ProductInput } from "@/app/admin/actions";
+import { deleteProduct, saveProduct, type ProductInput } from "@/app/admin/actions/products";
+import { borderFor, Field, inputClass, Toggle } from "@/components/admin/fields";
 import {
   categories,
   metals,
-  PRODUCT_IMAGE_BUCKET,
-  productImageUrl,
+  mediaUrl,
   purities,
   slugify,
   type CategorySlug,
   type MetalSlug,
 } from "@/lib/catalog";
-import { createClient } from "@/lib/supabase/client";
+import { uploadImage } from "@/lib/upload";
 
 const MAX_PHOTOS = 12;
-const MAX_EDGE = 2000;
-const UPLOADABLE_TYPES = ["image/jpeg", "image/png", "image/webp", "image/avif"];
 
 export interface ProductFormValues {
   id?: string;
@@ -45,61 +43,13 @@ interface Photo {
   error?: string;
 }
 
-/** Downscale to MAX_EDGE and re-encode as WebP so phone photos upload fast. */
-async function prepareImage(file: File): Promise<{ blob: Blob; ext: string }> {
-  try {
-    const bitmap = await createImageBitmap(file);
-    const scale = Math.min(1, MAX_EDGE / Math.max(bitmap.width, bitmap.height));
-    const canvas = document.createElement("canvas");
-    canvas.width = Math.round(bitmap.width * scale);
-    canvas.height = Math.round(bitmap.height * scale);
-    canvas.getContext("2d")!.drawImage(bitmap, 0, 0, canvas.width, canvas.height);
-    bitmap.close();
-    const blob = await new Promise<Blob | null>((resolve) => canvas.toBlob(resolve, "image/webp", 0.88));
-    if (blob) return { blob, ext: "webp" };
-  } catch {
-    // Fall through to uploading the original file.
-  }
-  if (UPLOADABLE_TYPES.includes(file.type)) {
-    return { blob: file, ext: file.type.split("/")[1].replace("jpeg", "jpg") };
-  }
-  throw new Error("This file type is not supported. Use JPG, PNG or WebP.");
-}
-
-const inputClass =
-  "mt-1.5 w-full rounded-xl border bg-white px-4 py-3 text-ink outline-none transition focus:border-gold focus:ring-2 focus:ring-gold/20";
-
-function Field({
-  label,
-  error,
-  hint,
-  children,
-}: {
-  label: string;
-  error?: string;
-  hint?: string;
-  children: React.ReactNode;
-}) {
-  return (
-    <label className="block">
-      <span className="font-caps text-[10px] tracking-[0.25em] text-muted">{label}</span>
-      {children}
-      {error ? (
-        <span className="mt-1 block text-xs text-red-700">{error}</span>
-      ) : (
-        hint && <span className="mt-1 block text-xs text-muted">{hint}</span>
-      )}
-    </label>
-  );
-}
-
 export default function ProductForm({ initial }: { initial: ProductFormValues }) {
   const router = useRouter();
   const isEdit = Boolean(initial.id);
   const [values, setValues] = useState(initial);
   const [slugTouched, setSlugTouched] = useState(isEdit);
   const [photos, setPhotos] = useState<Photo[]>(
-    initial.images.map((path) => ({ key: path, path, preview: productImageUrl(path), status: "done" })),
+    initial.images.map((path) => ({ key: path, path, preview: mediaUrl(path), status: "done" })),
   );
   const [dragging, setDragging] = useState(false);
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
@@ -126,7 +76,6 @@ export default function ProductForm({ initial }: { initial: ProductFormValues })
     const files = Array.from(fileList).filter((f) => f.type.startsWith("image/")).slice(0, Math.max(0, room));
     if (files.length === 0) return;
 
-    const supabase = createClient();
     const pending: Photo[] = files.map((file) => ({
       key: crypto.randomUUID(),
       preview: URL.createObjectURL(file),
@@ -138,12 +87,7 @@ export default function ProductForm({ initial }: { initial: ProductFormValues })
       files.map(async (file, i) => {
         const { key } = pending[i];
         try {
-          const { blob, ext } = await prepareImage(file);
-          const path = `products/${crypto.randomUUID()}.${ext}`;
-          const { error } = await supabase.storage
-            .from(PRODUCT_IMAGE_BUCKET)
-            .upload(path, blob, { contentType: blob.type || `image/${ext}`, cacheControl: "31536000" });
-          if (error) throw error;
+          const path = await uploadImage(file, "products");
           setPhotos((prev) => prev.map((p) => (p.key === key ? { ...p, path, status: "done" } : p)));
         } catch (error) {
           const message = (error as Error).message || "Upload failed";
@@ -198,7 +142,7 @@ export default function ProductForm({ initial }: { initial: ProductFormValues })
         window.scrollTo({ top: 0, behavior: "smooth" });
         return;
       }
-      router.push("/admin");
+      router.push("/admin/products");
       router.refresh();
     });
   }
@@ -212,12 +156,12 @@ export default function ProductForm({ initial }: { initial: ProductFormValues })
         setFormError(result.error ?? "Could not delete.");
         return;
       }
-      router.push("/admin");
+      router.push("/admin/products");
       router.refresh();
     });
   }
 
-  const border = (key: string) => (fieldErrors[key] ? "border-red-400" : "border-gold/30");
+  const border = (key: string) => borderFor(fieldErrors, key);
 
   return (
     <form onSubmit={onSubmit} className="grid gap-8 lg:grid-cols-[1.1fr_1fr]">
@@ -279,7 +223,7 @@ export default function ProductForm({ initial }: { initial: ProductFormValues })
                   className={`h-full w-full object-cover ${photo.status === "uploading" ? "opacity-50" : ""}`}
                 />
                 {i === 0 && photo.status === "done" && (
-                  <span className="absolute left-2 top-2 rounded-full bg-noir/85 px-2.5 py-1 font-caps text-[9px] tracking-[0.2em] text-gold-light">
+                  <span className="absolute left-2 top-2 rounded-full bg-gold px-2.5 py-1 font-caps text-[9px] tracking-[0.2em] text-ink">
                     Cover
                   </span>
                 )}
@@ -461,20 +405,7 @@ export default function ProductForm({ initial }: { initial: ProductFormValues })
               ["isBestseller", "Bestseller"],
             ] as const
           ).map(([key, label]) => (
-            <label
-              key={key}
-              className={`flex cursor-pointer items-center gap-2 rounded-xl border px-3 py-3 text-sm transition-colors ${
-                values[key] ? "border-gold bg-cream" : "border-gold/25"
-              }`}
-            >
-              <input
-                type="checkbox"
-                checked={values[key]}
-                onChange={(e) => set(key, e.target.checked)}
-                className="h-4 w-4 accent-[#b8893b]"
-              />
-              {label}
-            </label>
+            <Toggle key={key} checked={values[key]} onChange={(checked) => set(key, checked)} label={label} />
           ))}
         </div>
 
@@ -495,13 +426,13 @@ export default function ProductForm({ initial }: { initial: ProductFormValues })
         <button
           type="submit"
           disabled={isSaving || uploading || isDeleting}
-          className="bg-gold rounded-full px-8 py-3 font-caps text-xs tracking-[0.2em] text-noir disabled:opacity-50"
+          className="bg-gold rounded-full px-8 py-3 font-caps text-xs tracking-[0.2em] text-ink disabled:opacity-50"
         >
           {isSaving ? "Saving…" : uploading ? "Uploading photos…" : isEdit ? "Save changes" : "Add product"}
         </button>
         <button
           type="button"
-          onClick={() => router.push("/admin")}
+          onClick={() => router.push("/admin/products")}
           className="rounded-full px-5 py-3 text-sm text-muted hover:text-ink"
         >
           Cancel

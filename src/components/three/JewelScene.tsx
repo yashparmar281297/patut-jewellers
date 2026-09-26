@@ -29,9 +29,9 @@ function DiamondMaterial() {
     // where a transmissive material would only show the black behind it.
     <meshPhysicalMaterial
       color="#ffffff"
-      emissive="#aab4c8"
-      emissiveIntensity={0.18}
-      metalness={0.8}
+      emissive="#e4ebf7"
+      emissiveIntensity={0.42}
+      metalness={0.65}
       roughness={0.02}
       clearcoat={1}
       clearcoatRoughness={0}
@@ -180,9 +180,9 @@ export default function JewelScene() {
         <FloatingBand position={[-1.9, -1.3, -1.2]} scale={0.32} />
       </Responsive>
 
-      <Sparkles count={70} scale={[7, 5, 3]} size={2.4} speed={0.35} color="#f3dca0" opacity={0.8} />
+      <Sparkles count={60} scale={[7, 5, 3]} size={3} speed={0.35} color="#c9973f" opacity={0.9} />
 
-      <ContactShadows position={[0, -1.9, 0]} opacity={0.45} scale={8} blur={2.6} far={3} color="#000000" />
+      <ContactShadows position={[0, -1.9, 0]} opacity={0.35} scale={8} blur={2.8} far={3} color="#7a5a24" />
       <StudioLights />
     </Canvas>
   );

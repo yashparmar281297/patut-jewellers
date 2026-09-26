@@ -13,7 +13,7 @@ export default async function EditProductPage(props: PageProps<"/admin/products/
 
   return (
     <div>
-      <Link href="/admin" className="text-sm text-muted hover:text-gold-deep">← All products</Link>
+      <Link href="/admin/products" className="text-sm text-muted hover:text-gold-deep">← All products</Link>
       <h1 className="mt-3 font-display text-4xl text-ink sm:text-5xl">{p.name}</h1>
       <div className="mt-8">
         <ProductForm

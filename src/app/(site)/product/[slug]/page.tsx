@@ -5,9 +5,10 @@ import JewelIcon from "@/components/JewelIcon";
 import ProductCard from "@/components/ProductCard";
 import ProductGallery from "@/components/ProductGallery";
 import TiltCard from "@/components/TiltCard";
+import WhatsAppIcon from "@/components/WhatsAppIcon";
 import { getCategory, getMetal } from "@/lib/catalog";
 import { getProduct, getProductSlugs, getProducts } from "@/lib/products";
-import { site } from "@/lib/site";
+import { site, whatsappLink } from "@/lib/site";
 
 export const revalidate = 300;
 
@@ -40,16 +41,21 @@ export default async function ProductPage(props: PageProps<"/product/[slug]">) {
     ["Category", category.name],
   ];
 
-  const enquiryText = `Hello Patut Jewellers, I am interested in the ${product.name} (${metal.name} ${category.name}).`;
-  const enquiryHref = site.whatsapp
-    ? `https://wa.me/${site.whatsapp}?text=${encodeURIComponent(enquiryText)}`
-    : site.phone
-      ? `tel:${site.phone}`
-      : "/#visit";
+  const productUrl = site.url ? `${site.url}/product/${product.slug}` : "";
+  const whatsappHref = whatsappLink(
+    [
+      `Hello Patut Jewellers, I am interested in the ${product.name}`,
+      `(${metal.name} ${category.name}, ${product.purity}, ${product.weight} g).`,
+      "Please share the price and more details.",
+      productUrl,
+    ]
+      .filter(Boolean)
+      .join(" "),
+  );
 
   return (
     <>
-      <section className="mx-auto grid max-w-7xl gap-12 px-4 py-12 sm:px-6 lg:grid-cols-2 lg:gap-20 lg:px-10 lg:py-20">
+      <section className="mx-auto grid max-w-7xl gap-8 px-4 py-8 sm:gap-12 sm:px-6 sm:py-12 lg:grid-cols-2 lg:gap-20 lg:px-10 lg:py-20">
         {product.images.length > 0 ? (
           <ProductGallery images={product.images} name={product.name} />
         ) : (
@@ -62,7 +68,7 @@ export default async function ProductPage(props: PageProps<"/product/[slug]">) {
                     : "bg-[radial-gradient(circle_at_50%_35%,#fffaf0,#f1e5d0_50%,#dcc39a)]"
                 }`}
               >
-                <div className="absolute inset-x-16 bottom-14 h-10 rounded-full bg-noir/15 blur-2xl" />
+                <div className="absolute inset-x-16 bottom-14 h-10 rounded-full bg-gold-deep/15 blur-2xl" />
                 <JewelIcon
                   category={product.category}
                   metal={product.metal}
@@ -82,9 +88,9 @@ export default async function ProductPage(props: PageProps<"/product/[slug]">) {
             <span className="mx-2">/</span>
             <Link href={`/collections/${metal.slug}/${category.slug}`} className="hover:text-gold-deep">{category.name}</Link>
           </nav>
-          <h1 className="mt-4 font-display text-5xl font-light text-ink sm:text-6xl">{product.name}</h1>
+          <h1 className="mt-4 font-display text-4xl font-light leading-tight text-ink sm:text-6xl">{product.name}</h1>
           <p className="mt-3 font-caps text-[11px] tracking-[0.3em] text-gold-deep">{metal.purity}</p>
-          <div className="gold-rule my-8 w-full opacity-60" />
+          <div className="gold-rule my-6 w-full opacity-60 sm:my-8" />
           <p className="leading-relaxed text-muted">{product.description}</p>
 
           <dl className="mt-8 divide-y divide-gold/15 border-y border-gold/15">
@@ -96,32 +102,26 @@ export default async function ProductPage(props: PageProps<"/product/[slug]">) {
             ))}
           </dl>
 
-          <p className="mt-6 text-sm text-muted">
-            Price is calculated on the day&apos;s {isDiamond ? "gold rate and diamond grade" : "gold rate"}, plus making charges.
+          {site.whatsapp && (
+            <a
+              href={whatsappHref}
+              target="_blank"
+              rel="noreferrer"
+              className="mt-8 inline-flex w-full items-center justify-center gap-3 rounded-full bg-whatsapp px-8 py-4 text-base font-medium text-white shadow-[0_14px_35px_-12px_rgba(37,211,102,0.85)] transition-transform hover:-translate-y-0.5 sm:w-auto sm:self-start"
+            >
+              <WhatsAppIcon className="h-6 w-6" />
+              Connect on WhatsApp
+            </a>
+          )}
+          <p className="mt-3 text-sm text-muted">
+            Chat with us for today&apos;s price, more photos or a video call.
           </p>
 
-          <div className="mt-8 flex flex-wrap gap-4">
-            <a
-              href={enquiryHref}
-              target={site.whatsapp ? "_blank" : undefined}
-              rel="noreferrer"
-              className="bg-gold rounded-full px-8 py-4 font-caps text-xs tracking-[0.25em] text-noir shadow-[0_10px_40px_-12px_rgba(184,137,59,0.7)]"
-            >
-              Enquire for Price
-            </a>
-            <Link
-              href="/#visit"
-              className="rounded-full border border-gold px-8 py-4 font-caps text-xs tracking-[0.25em] text-gold-deep transition-colors hover:bg-gold hover:text-ivory"
-            >
-              Try in Store
-            </Link>
-          </div>
-
-          <ul className="mt-10 grid grid-cols-2 gap-3 text-sm text-muted">
-            <li>✦ Lifetime exchange</li>
-            <li>✦ {isDiamond ? "Certified diamonds" : "HUID hallmarked"}</li>
-            <li>✦ Resizing available</li>
-            <li>✦ Secure gift packaging</li>
+          <ul className="mt-8 grid grid-cols-2 gap-3 text-sm text-muted">
+            <li>✦ {isDiamond ? "Certified diamonds" : "6-digit HUID hallmarked"}</li>
+            <li>✦ Easy gold exchange</li>
+            <li>✦ Custom orders welcome</li>
+            <li>✦ Try it at our store</li>
           </ul>
         </div>
       </section>

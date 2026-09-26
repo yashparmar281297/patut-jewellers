@@ -40,7 +40,7 @@ export default function ProductCard({ product }: { product: Product }) {
             </>
           ) : (
             <>
-              <div className="absolute inset-x-8 bottom-8 h-6 rounded-full bg-noir/10 blur-xl" />
+              <div className="absolute inset-x-8 bottom-8 h-6 rounded-full bg-gold-deep/15 blur-xl" />
               <JewelIcon
                 category={product.category}
                 metal={product.metal}
@@ -51,7 +51,7 @@ export default function ProductCard({ product }: { product: Product }) {
             </>
           )}
           {(product.isNew || product.isBestseller) && (
-            <span className="absolute left-4 top-4 rounded-full bg-noir/85 px-3 py-1 font-caps text-[9px] tracking-[0.25em] text-gold-light">
+            <span className="absolute left-4 top-4 rounded-full bg-gold px-3 py-1 font-caps text-[9px] tracking-[0.25em] text-ink shadow-sm">
               {product.isNew ? "New" : "Bestseller"}
             </span>
           )}

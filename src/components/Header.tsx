@@ -4,8 +4,10 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
+import AnnouncementBar from "@/components/AnnouncementBar";
 import JewelIcon from "@/components/JewelIcon";
 import { categories, metals, type MetalSlug } from "@/lib/catalog";
+import { whatsappLink } from "@/lib/site";
 
 export default function Header() {
   const pathname = usePathname();
@@ -33,22 +35,17 @@ export default function Header() {
     document.body.style.overflow = drawerOpen ? "hidden" : "";
   }, [drawerOpen]);
 
-  // Over the dark home hero the header is transparent with light text.
+  // Transparent over the home hero until the page scrolls.
   const overHero = pathname === "/" && !scrolled && !openMenu;
 
   return (
     <>
-      <div className="bg-noir py-2 text-center font-caps text-[10px] tracking-[0.3em] text-gold-light/90 sm:text-[11px]">
-        BIS Hallmarked Gold <span className="mx-2 text-gold">✦</span> Certified Diamonds
-        <span className="hidden sm:inline">
-          <span className="mx-2 text-gold">✦</span> Lifetime Exchange
-        </span>
-      </div>
+      <AnnouncementBar />
 
       <header
         className={`sticky top-0 z-50 transition-colors duration-500 ${
           overHero
-            ? "bg-transparent text-ivory"
+            ? "bg-transparent text-ink"
             : "border-b border-gold/15 bg-ivory/90 text-ink backdrop-blur-md"
         }`}
         onMouseLeave={() => setOpenMenu(null)}
@@ -112,16 +109,14 @@ export default function Header() {
             >
               Our Story
             </Link>
-            <Link
-              href="/#visit"
-              className={`rounded-full border px-4 py-2 font-caps text-[11px] tracking-[0.2em] transition-colors sm:px-5 ${
-                overHero
-                  ? "border-gold-light/60 hover:bg-gold-light hover:text-noir"
-                  : "border-gold text-gold-deep hover:bg-gold hover:text-ivory"
-              }`}
+            <a
+              href={whatsappLink("Hello Patut Jewellers, I would like to book a visit to your store.")}
+              target="_blank"
+              rel="noreferrer"
+              className="rounded-full border border-gold px-3.5 py-2 font-caps text-[10px] tracking-[0.18em] text-gold-deep transition-colors hover:bg-gold hover:text-ivory sm:px-5 sm:text-[11px]"
             >
               Book Visit
-            </Link>
+            </a>
           </nav>
         </div>
 
@@ -129,7 +124,7 @@ export default function Header() {
         {metals.map((metal) => (
           <div
             key={metal.slug}
-            className={`absolute inset-x-0 top-full border-b border-gold/20 bg-ivory text-ink shadow-[0_30px_60px_-30px_rgba(20,14,10,0.35)] transition-all duration-500 ${
+            className={`absolute inset-x-0 top-full hidden border-b lg:block border-gold/20 bg-ivory text-ink shadow-[0_30px_60px_-30px_rgba(120,90,40,0.35)] transition-all duration-500 ${
               openMenu === metal.slug
                 ? "visible translate-y-0 opacity-100"
                 : "invisible -translate-y-2 opacity-0"
@@ -164,7 +159,7 @@ export default function Header() {
                 href={`/collections/${metal.slug}`}
                 className={`sheen group relative flex min-h-[15rem] flex-col justify-end overflow-hidden rounded-2xl p-7 ${
                   metal.slug === "gold"
-                    ? "bg-[radial-gradient(circle_at_30%_20%,#f3dca0,#c0903c_45%,#6e4c18)] text-noir"
+                    ? "bg-[radial-gradient(circle_at_30%_20%,#fbeecb,#dcb465_45%,#b08132)] text-ink"
                     : "bg-[radial-gradient(circle_at_30%_20%,#ffffff,#d9dde3_40%,#2a2f38)] text-ivory"
                 }`}
               >
@@ -186,7 +181,7 @@ export default function Header() {
 
       {/* Mobile drawer */}
       <div
-        className={`fixed inset-0 z-[60] bg-noir/50 backdrop-blur-sm transition-opacity lg:hidden ${
+        className={`fixed inset-0 z-[60] bg-ink/40 backdrop-blur-sm transition-opacity lg:hidden ${
           drawerOpen ? "opacity-100" : "pointer-events-none opacity-0"
         }`}
         onClick={() => setDrawerOpen(false)}

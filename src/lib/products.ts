@@ -1,16 +1,9 @@
 import "server-only";
 
 import { cache } from "react";
-import { createClient } from "@supabase/supabase-js";
-import type { Database, ProductRow } from "@/lib/supabase/database.types";
-import { productImageUrl, type CategorySlug, type MetalSlug, type Product } from "@/lib/catalog";
-
-// Storefront reads are public, so they use a cookie-less client and can be cached by the page.
-const supabase = createClient<Database>(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-  { auth: { persistSession: false } },
-);
+import type { ProductRow } from "@/lib/supabase/database.types";
+import { publicClient as supabase } from "@/lib/supabase/public";
+import { mediaUrl, type CategorySlug, type MetalSlug, type Product } from "@/lib/catalog";
 
 export function toProduct(row: ProductRow): Product {
   return {
@@ -23,7 +16,7 @@ export function toProduct(row: ProductRow): Product {
     weight: Number(row.weight),
     diamondCarat: row.diamond_carat === null ? null : Number(row.diamond_carat),
     description: row.description,
-    images: row.images.map(productImageUrl),
+    images: row.images.map(mediaUrl),
     isNew: row.is_new,
     isBestseller: row.is_bestseller,
     isPublished: row.is_published,

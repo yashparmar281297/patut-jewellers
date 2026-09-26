@@ -1,11 +1,9 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import { redirect } from "next/navigation";
 import { z } from "zod";
-import { requireAdmin } from "@/lib/admin";
+import { fieldErrorsFrom, requireAdmin, type ActionResult } from "@/lib/admin";
 import { categories, metals, PRODUCT_IMAGE_BUCKET, purities } from "@/lib/catalog";
-import { createClient } from "@/lib/supabase/server";
 
 const productSchema = z.object({
   id: z.uuid().optional(),
@@ -31,9 +29,7 @@ const productSchema = z.object({
 
 export type ProductInput = z.input<typeof productSchema>;
 
-export type SaveResult =
-  | { ok: true; id: string }
-  | { ok: false; error: string; fieldErrors?: Record<string, string> };
+export type SaveResult = ActionResult;
 
 function refreshStorefront() {
   // Every storefront page lists products, so refresh them all.
@@ -43,12 +39,7 @@ function refreshStorefront() {
 export async function saveProduct(input: ProductInput): Promise<SaveResult> {
   const parsed = productSchema.safeParse(input);
   if (!parsed.success) {
-    const fieldErrors: Record<string, string> = {};
-    for (const issue of parsed.error.issues) {
-      const key = String(issue.path[0] ?? "form");
-      fieldErrors[key] ??= issue.message;
-    }
-    return { ok: false, error: "Please fix the highlighted fields.", fieldErrors };
+    return { ok: false, error: "Please fix the highlighted fields.", fieldErrors: fieldErrorsFrom(parsed.error.issues) };
   }
 
   let supabase;
@@ -117,7 +108,7 @@ function saveError(error: { code?: string; message: string }): SaveResult {
   return { ok: false, error: error.message };
 }
 
-export async function deleteProduct(id: string): Promise<{ ok: boolean; error?: string }> {
+export async function deleteProduct(id: string): Promise<ActionResult> {
   if (!z.uuid().safeParse(id).success) return { ok: false, error: "Invalid product." };
 
   let supabase;
@@ -143,7 +134,7 @@ export async function deleteProduct(id: string): Promise<{ ok: boolean; error?: 
   return { ok: true };
 }
 
-export async function setPublished(id: string, isPublished: boolean): Promise<{ ok: boolean; error?: string }> {
+export async function setPublished(id: string, isPublished: boolean): Promise<ActionResult> {
   if (!z.uuid().safeParse(id).success) return { ok: false, error: "Invalid product." };
 
   let supabase;
@@ -157,12 +148,7 @@ export async function setPublished(id: string, isPublished: boolean): Promise<{ 
   if (error) return { ok: false, error: error.message };
 
   refreshStorefront();
-  revalidatePath("/admin");
+  revalidatePath("/admin", "layout");
   return { ok: true };
 }
 
-export async function signOut() {
-  const supabase = await createClient();
-  await supabase.auth.signOut();
-  redirect("/admin/login");
-}

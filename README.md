@@ -12,12 +12,17 @@ npm install
 npm run dev
 ```
 
-The site runs at http://localhost:3000 and the catalogue admin at http://localhost:3000/admin.
+The site runs at http://localhost:3000 and the admin panel at http://localhost:3000/admin.
 
-## Catalogue (Supabase)
+## Admin panel
+
+`/admin` opens a dashboard with Manage and Add pages for **Products**, **Offers** and **Testimonials** — each list has Edit, Delete and a Live/Hidden switch. Active offers and published testimonials appear on the home page automatically.
+
+## Data (Supabase)
 
 - `public.products` holds every piece. Visitors can read published products only; row-level security limits all writes to admins.
 - Photos live in the public `product-images` storage bucket under `products/`. The admin panel resizes photos to at most 2000px WebP in the browser before uploading.
+- `public.offers` and `public.testimonials` hold the home page offers and customer feedback (images under `offers/` and `testimonials/` in the same bucket).
 - `public.admins` lists the users allowed to manage the catalogue.
 - The schema is in `supabase/migrations/`.
 
@@ -37,4 +42,4 @@ select id from auth.users where email = 'owner@example.com';
 
 ## Store details
 
-Phone, WhatsApp, email and address shown on the site are set in `src/lib/site.ts`. Empty fields are hidden.
+Phone, WhatsApp, email, address and the announcement-bar lines are set in `src/lib/site.ts`. Empty fields are hidden. Set `NEXT_PUBLIC_SITE_URL` once the site is live so WhatsApp product messages include a link to the product.
