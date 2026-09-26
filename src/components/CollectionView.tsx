@@ -62,7 +62,7 @@ export default function CollectionView({ metal, category, products: items }: Pro
       </section>
 
       {/* Sub-category navigation */}
-      <div className="sticky top-20 z-30 border-b border-gold/15 bg-ivory/90 backdrop-blur-md">
+      <div className="sticky top-16 z-30 lg:top-20 border-b border-gold/15 bg-ivory/90 backdrop-blur-md">
         <div className="mx-auto flex max-w-7xl gap-2 overflow-x-auto px-4 py-3 [scrollbar-width:none] sm:px-6 lg:px-10">
           <Link
             href={`/collections/${metal.slug}`}

@@ -50,7 +50,7 @@ export default function Header() {
         }`}
         onMouseLeave={() => setOpenMenu(null)}
       >
-        <div className="mx-auto grid h-20 max-w-7xl grid-cols-[1fr_auto_1fr] items-center px-4 sm:px-6 lg:px-10">
+        <div className="mx-auto grid h-16 max-w-7xl grid-cols-[1fr_auto_1fr] items-center px-4 sm:px-6 lg:h-20 lg:px-10">
           {/* Left nav */}
           <nav className="hidden items-center gap-8 lg:flex">
             {metals.map((metal) => (
@@ -92,7 +92,7 @@ export default function Header() {
 
           {/* Logo */}
           <Link href="/" className="flex items-center gap-3" aria-label="Patut Jewellers home">
-            <span className="relative h-12 w-12 overflow-hidden rounded-full ring-1 ring-gold/50 sm:h-14 sm:w-14">
+            <span className="relative h-11 w-11 overflow-hidden rounded-full ring-1 ring-gold/50 lg:h-14 lg:w-14">
               <Image src="/brand/monogram.jpg" alt="" fill sizes="56px" className="object-cover" priority />
             </span>
             <span className="hidden flex-col leading-none sm:flex">

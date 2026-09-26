@@ -150,9 +150,9 @@ function StudioLights() {
 }
 
 function Responsive({ children }: { children: React.ReactNode }) {
-  const { width } = useThree((state) => state.viewport);
-  // Shrink the composition on narrow (portrait) viewports so the ring stays in frame.
-  const scale = Math.min(1, width / 5.2);
+  const { width, height } = useThree((state) => state.viewport);
+  // Shrink the composition when the canvas is narrow or short so the ring stays in frame.
+  const scale = Math.min(1, width / 5.2, height / 3.6);
   return <group scale={scale}>{children}</group>;
 }
 

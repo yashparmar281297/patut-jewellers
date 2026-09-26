@@ -50,36 +50,40 @@ export default async function Home() {
   return (
     <>
       {/* ───────────── Hero ───────────── */}
-      <section className="relative -mt-20 overflow-hidden bg-[radial-gradient(ellipse_at_72%_42%,#fffdf8_0%,#f7ecd8_38%,#ecdab8_100%)] pt-20">
-        <div className="pointer-events-none absolute right-[10%] top-1/3 h-[28rem] w-[28rem] rounded-full bg-gold-light/30 blur-[110px]" />
-        <div className="relative mx-auto grid max-w-7xl items-center gap-2 px-4 pb-12 sm:px-6 lg:min-h-[calc(100svh-2.25rem-5rem)] lg:grid-cols-[1.05fr_1fr] lg:gap-6 lg:px-10 lg:pb-16">
-          <div className="relative order-1 h-[260px] sm:h-[380px] lg:order-2 lg:h-[min(600px,calc(100svh-10rem))]">
+      <section className="relative -mt-16 overflow-hidden bg-[radial-gradient(ellipse_at_72%_42%,#fffdf8_0%,#f7ecd8_38%,#ecdab8_100%)] pt-16 lg:-mt-20 lg:pt-20">
+        <div className="pointer-events-none absolute right-[10%] top-1/3 h-[28rem] w-[28rem] max-w-full rounded-full bg-gold-light/30 blur-[110px]" />
+        {/*
+          Phones/tablets: exactly one screen tall (screen minus the 2.25rem announcement bar and
+          4rem header); the 3D ring takes whatever height the text leaves.
+        */}
+        <div className="relative mx-auto flex h-[calc(100svh-6.25rem)] max-h-[60rem] min-h-[31rem] max-w-7xl flex-col px-4 sm:px-6 lg:grid lg:h-auto lg:max-h-none lg:min-h-[calc(100svh-2.25rem-5rem)] lg:grid-cols-[1.05fr_1fr] lg:items-center lg:gap-6 lg:px-10 lg:pb-16">
+          <div className="relative min-h-[140px] flex-1 lg:order-2 lg:h-[min(600px,calc(100svh-10rem))] lg:flex-none">
             <JewelCanvas />
           </div>
 
-          <div className="order-2 text-center lg:order-1 lg:text-left">
-            <p className="animate-rise font-caps text-[10px] tracking-[0.4em] text-gold-deep sm:text-[11px]">
+          <div className="shrink-0 pb-6 pt-1 text-center sm:pb-10 lg:order-1 lg:p-0 lg:text-left">
+            <p className="animate-rise font-caps text-[9px] tracking-[0.35em] text-gold-deep sm:text-[11px] sm:tracking-[0.4em]">
               Fine Gold &amp; Diamond Jewellery
             </p>
-            <h1 className="animate-rise mt-4 font-display text-[2.6rem] font-light leading-[1.04] text-ink [animation-delay:100ms] sm:mt-6 sm:text-6xl lg:text-7xl xl:text-[5.25rem] [@media(max-height:760px)]:lg:text-6xl">
+            <h1 className="animate-rise mt-2.5 font-display text-[2.35rem] font-light leading-[1.04] text-ink [animation-delay:100ms] sm:mt-5 sm:text-6xl lg:mt-6 lg:text-7xl xl:text-[5.25rem] [@media(max-height:680px)]:text-[2.1rem] [@media(max-height:760px)]:lg:text-6xl">
               Crafted in <span className="text-gilded italic">Gold</span>,
               <br />
               Kissed by <span className="text-gilded italic">Light</span>
             </h1>
-            <p className="animate-rise mx-auto mt-4 max-w-md text-[15px] leading-relaxed text-muted [animation-delay:200ms] sm:mt-6 sm:text-base lg:mx-0 lg:text-lg">
+            <p className="animate-rise mx-auto mt-2.5 max-w-md text-sm leading-relaxed text-muted [animation-delay:200ms] sm:mt-5 sm:text-base lg:mx-0 lg:mt-6 lg:text-lg">
               Heirloom craftsmanship meets modern brilliance — rings, necklaces, jhumkas and
               mangalsutras made to be treasured for generations.
             </p>
-            <div className="animate-rise mt-7 flex flex-wrap justify-center gap-3 [animation-delay:300ms] sm:mt-9 sm:gap-4 lg:justify-start">
+            <div className="animate-rise mt-5 flex justify-center gap-2.5 [animation-delay:300ms] sm:mt-8 sm:gap-4 lg:mt-9 lg:justify-start">
               <Link
                 href="/collections/gold"
-                className="bg-gold rounded-full px-7 py-3.5 font-caps text-[11px] tracking-[0.22em] text-ink shadow-[0_12px_35px_-12px_rgba(184,137,59,0.9)] transition-[background-position,transform] duration-700 hover:-translate-y-0.5 hover:[background-position:100%_0] sm:px-8 sm:py-4 sm:text-xs"
+                className="bg-gold whitespace-nowrap rounded-full px-5 py-3 font-caps text-[10px] tracking-[0.16em] text-ink shadow-[0_12px_35px_-12px_rgba(184,137,59,0.9)] transition-[background-position,transform] duration-700 hover:-translate-y-0.5 hover:[background-position:100%_0] sm:px-8 sm:py-4 sm:text-xs sm:tracking-[0.22em]"
               >
                 Explore Gold
               </Link>
               <Link
                 href="/collections/diamond"
-                className="rounded-full border border-gold bg-white/50 px-7 py-3.5 font-caps text-[11px] tracking-[0.22em] text-gold-deep backdrop-blur transition-colors hover:bg-gold hover:text-ivory sm:px-8 sm:py-4 sm:text-xs"
+                className="whitespace-nowrap rounded-full border border-gold bg-white/50 px-5 py-3 font-caps text-[10px] tracking-[0.16em] text-gold-deep backdrop-blur transition-colors hover:bg-gold hover:text-ivory sm:px-8 sm:py-4 sm:text-xs sm:tracking-[0.22em]"
               >
                 Explore Diamond
               </Link>
