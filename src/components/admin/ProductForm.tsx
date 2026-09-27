@@ -172,7 +172,7 @@ export default function ProductForm({ initial }: { initial: ProductFormValues })
       )}
 
       {/* Photos */}
-      <section className="rounded-3xl border border-gold/20 bg-white p-5 sm:p-7">
+      <section className="rounded-3xl border border-gold/20 bg-paper p-5 sm:p-7">
         <div className="flex items-baseline justify-between">
           <h2 className="font-display text-2xl text-ink">Photos</h2>
           <span className="text-xs text-muted">
@@ -225,7 +225,7 @@ export default function ProductForm({ initial }: { initial: ProductFormValues })
                   className={`h-full w-full object-cover ${photo.status === "uploading" ? "opacity-50" : ""}`}
                 />
                 {i === 0 && photo.status === "done" && (
-                  <span className="absolute left-2 top-2 rounded-full bg-gold px-2.5 py-1 font-caps text-[9px] tracking-[0.2em] text-ink">
+                  <span className="absolute left-2 top-2 rounded-full bg-gold px-2.5 py-1 font-caps text-[9px] tracking-[0.2em] text-paper">
                     Cover
                   </span>
                 )}
@@ -246,7 +246,7 @@ export default function ProductForm({ initial }: { initial: ProductFormValues })
                         type="button"
                         disabled={i === 0}
                         onClick={() => movePhoto(i, i - 1)}
-                        className="rounded-full bg-white/90 px-2.5 py-1 text-xs text-ink disabled:opacity-30"
+                        className="rounded-full bg-paper/90 px-2.5 py-1 text-xs text-ink disabled:opacity-30"
                         aria-label="Move left"
                       >
                         ←
@@ -255,7 +255,7 @@ export default function ProductForm({ initial }: { initial: ProductFormValues })
                         <button
                           type="button"
                           onClick={() => movePhoto(i, 0)}
-                          className="rounded-full bg-white/90 px-2.5 py-1 text-[11px] text-ink"
+                          className="rounded-full bg-paper/90 px-2.5 py-1 text-[11px] text-ink"
                         >
                           Cover
                         </button>
@@ -266,7 +266,7 @@ export default function ProductForm({ initial }: { initial: ProductFormValues })
                     <button
                       type="button"
                       onClick={() => removePhoto(photo.key)}
-                      className="ml-auto rounded-full bg-white/90 px-2.5 py-1 text-xs text-red-700"
+                      className="ml-auto rounded-full bg-paper/90 px-2.5 py-1 text-xs text-red-700"
                       aria-label="Remove photo"
                     >
                       ✕
@@ -281,7 +281,7 @@ export default function ProductForm({ initial }: { initial: ProductFormValues })
       </section>
 
       {/* Details */}
-      <section className="space-y-5 rounded-3xl border border-gold/20 bg-white p-5 sm:p-7">
+      <section className="space-y-5 rounded-3xl border border-gold/20 bg-paper p-5 sm:p-7">
         <h2 className="font-display text-2xl text-ink">Details</h2>
 
         <Field label="Product name" error={fieldErrors.name}>
@@ -429,7 +429,7 @@ export default function ProductForm({ initial }: { initial: ProductFormValues })
         <button
           type="submit"
           disabled={isSaving || uploading || isDeleting}
-          className="bg-gold rounded-full px-8 py-3 font-caps text-xs tracking-[0.2em] text-ink disabled:opacity-50"
+          className="bg-gold rounded-full px-8 py-3 font-caps text-xs tracking-[0.2em] text-paper disabled:opacity-50"
         >
           {isSaving ? "Saving…" : uploading ? "Uploading photos…" : isEdit ? "Save changes" : "Add product"}
         </button>

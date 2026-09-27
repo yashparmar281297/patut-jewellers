@@ -34,12 +34,12 @@ export default async function LiveRates() {
   if (!rates) return null;
 
   const items = [
-    { label: "Gold 999", unit: "per 10 g", value: rates.gold10g, tone: "from-[#fff5d8] to-[#f1d58f]" },
-    { label: "Silver 999", unit: "per 1 kg", value: rates.silver1kg, tone: "from-[#ffffff] to-[#dfe3e8]" },
+    { label: "Gold 999", unit: "per 10 g", value: rates.gold10g, tone: "from-[#f3eadd] to-[#dbc6ab]" },
+    { label: "Silver 999", unit: "per 1 kg", value: rates.silver1kg, tone: "from-[#f6eff4] to-[#eadde6]" },
   ];
 
   return (
-    <section aria-label="Live MCX rates" className="border-b border-gold/20 bg-white">
+    <section aria-label="Live MCX rates" className="border-b border-gold/20 bg-paper">
       <div className="mx-auto flex max-w-7xl flex-col gap-4 px-4 py-5 sm:px-6 md:flex-row md:items-center md:justify-between lg:px-10">
         <div>
           <p className="flex items-center gap-2 whitespace-nowrap font-caps text-[11px] tracking-[0.3em] text-ink">

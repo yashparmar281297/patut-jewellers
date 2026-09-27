@@ -1,16 +1,19 @@
 @import "tailwindcss";
 
 @theme {
-  /* Champagne, ivory and gold taken from the PJ logo */
-  --color-ivory: #fcf8f1;
-  --color-cream: #f4e9d6;
-  --color-champagne: #efdfc2;
-  --color-sand: #e6d3b1;
-  --color-gold: #b8893b;
-  --color-gold-light: #e2bf78;
-  --color-gold-deep: #86601f;
+  /* Brand palette: #e7d5bc · #dbc6ab · #cdb497 · #7b5321 · #c39fba */
+  --color-ivory: #e7d5bc; /* page background */
+  --color-paper: #f3eadd; /* cards and inputs (light tint of the background) */
+  --color-cream: #dbc6ab; /* alternating sections */
+  --color-champagne: #dbc6ab;
+  --color-sand: #cdb497; /* borders, bands */
+  --color-gold: #7b5321; /* primary: buttons, icons, accents */
+  --color-gold-light: #cdb497;
+  --color-gold-deep: #6a4619; /* primary for small text */
+  --color-mauve: #c39fba; /* secondary accent */
+  --color-mauve-deep: #8a6582;
   --color-ink: #2e2519;
-  --color-muted: #7a6a55;
+  --color-muted: #634f3a;
   --color-whatsapp: #25d366;
 
   --font-display: var(--font-cormorant), "Times New Roman", serif;
@@ -39,12 +42,12 @@ body {
 .text-gilded {
   background: linear-gradient(
     100deg,
-    #7a5415 0%,
-    #b8893b 24%,
-    #d9b566 44%,
-    #a47629 64%,
-    #7a5415 84%,
-    #c49a4b 100%
+    #7b5321 0%,
+    #9a6b3c 24%,
+    #b88aa8 44%,
+    #9a6b3c 64%,
+    #7b5321 84%,
+    #a07a5a 100%
   );
   background-size: 200% auto;
   -webkit-background-clip: text;
@@ -54,7 +57,7 @@ body {
 }
 
 .bg-gold {
-  background: linear-gradient(115deg, #c0913f, #dbb566 28%, #f5e2ab 50%, #d6ad5c 72%, #c0913f);
+  background: linear-gradient(115deg, #7b5321, #946839 30%, #a98052 50%, #8d6232 70%, #7b5321);
   background-size: 200% auto;
 }
 

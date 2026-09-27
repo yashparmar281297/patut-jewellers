@@ -21,7 +21,7 @@ export default function AdminNav() {
             key={item.href}
             href={item.href}
             className={`shrink-0 rounded-full px-4 py-2 text-sm transition-colors ${
-              active ? "bg-gold text-ink" : "text-ink/70 hover:bg-cream hover:text-ink"
+              active ? "bg-gold text-paper" : "text-ink/70 hover:bg-cream hover:text-ink"
             }`}
           >
             {item.label}

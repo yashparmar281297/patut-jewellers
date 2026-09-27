@@ -9,7 +9,7 @@ import { getAdminSession } from "@/lib/admin";
 import { categories, getCategory, mediaUrl, metals, type CategorySlug, type MetalSlug } from "@/lib/catalog";
 
 const selectClass =
-  "rounded-full border border-gold/30 bg-white px-4 py-2.5 text-sm text-ink outline-none focus:border-gold";
+  "rounded-full border border-gold/30 bg-paper px-4 py-2.5 text-sm text-ink outline-none focus:border-gold";
 
 export default async function AdminProductsPage(props: PageProps<"/admin/products">) {
   const params = await props.searchParams;
@@ -65,7 +65,7 @@ export default async function AdminProductsPage(props: PageProps<"/admin/product
           <option value="">Any photos</option>
           <option value="missing">Missing photos</option>
         </select>
-        <button type="submit" className="bg-gold rounded-full px-6 py-2.5 text-sm text-ink">Filter</button>
+        <button type="submit" className="bg-gold rounded-full px-6 py-2.5 text-sm text-paper">Filter</button>
         {filtered && (
           <Link href="/admin/products" className="self-center text-sm text-gold-deep underline underline-offset-4">
             Clear
@@ -76,11 +76,11 @@ export default async function AdminProductsPage(props: PageProps<"/admin/product
       {error && <p className="mt-6 rounded-xl bg-red-50 px-4 py-3 text-sm text-red-700">{error.message}</p>}
 
       {count === 0 ? (
-        <div className="mt-6 rounded-2xl border border-gold/25 bg-white p-10 text-center text-muted">
+        <div className="mt-6 rounded-2xl border border-gold/25 bg-paper p-10 text-center text-muted">
           {filtered ? "No products match these filters." : "No products have been added yet."}
         </div>
       ) : (
-        <div className="mt-6 overflow-hidden rounded-2xl border border-gold/25 bg-white">
+        <div className="mt-6 overflow-hidden rounded-2xl border border-gold/25 bg-paper">
           <table className="w-full border-collapse text-left text-sm">
             <thead className="hidden md:table-header-group">
               <tr className="border-b border-gold/20 bg-cream/60 font-caps text-[10px] tracking-[0.2em] text-muted">

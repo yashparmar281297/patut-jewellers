@@ -28,7 +28,7 @@ export default function PageHeader({
       {action && (
         <Link
           href={action.href}
-          className="bg-gold inline-flex h-11 items-center rounded-full px-6 font-caps text-[11px] tracking-[0.2em] text-ink shadow-[0_10px_30px_-12px_rgba(184,137,59,0.8)]"
+          className="bg-gold inline-flex h-11 items-center rounded-full px-6 font-caps text-[11px] tracking-[0.2em] text-paper shadow-[0_10px_30px_-12px_rgba(123,83,33,0.8)]"
         >
           {action.label}
         </Link>

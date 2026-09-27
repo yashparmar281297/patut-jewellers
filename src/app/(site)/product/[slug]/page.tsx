@@ -54,8 +54,8 @@ export default async function ProductPage(props: PageProps<"/product/[slug]">) {
               <div
                 className={`sheen relative aspect-square overflow-hidden rounded-[2rem] ${
                   isDiamond
-                    ? "bg-[radial-gradient(circle_at_50%_35%,#ffffff,#eef0f3_45%,#cfd4db)]"
-                    : "bg-[radial-gradient(circle_at_50%_35%,#fffaf0,#f1e5d0_50%,#dcc39a)]"
+                    ? "bg-[radial-gradient(circle_at_50%_35%,#f6eff4,#eadde6_45%,#dcc6d5)]"
+                    : "bg-[radial-gradient(circle_at_50%_35%,#f3eadd,#e7d5bc_50%,#dbc6ab)]"
                 }`}
               >
                 <div className="absolute inset-x-16 bottom-14 h-10 rounded-full bg-gold-deep/15 blur-2xl" />
@@ -63,7 +63,7 @@ export default async function ProductPage(props: PageProps<"/product/[slug]">) {
                   category={product.category}
                   metal={product.metal}
                   className={`animate-float absolute inset-0 m-auto h-3/5 w-3/5 [transform:translateZ(60px)] ${
-                    isDiamond ? "text-[#8b8f97]" : "text-gold"
+                    isDiamond ? "text-[#8a6582]" : "text-gold"
                   }`}
                 />
                 <span className="animate-twinkle absolute right-[22%] top-[20%] text-2xl text-gold-light">✦</span>

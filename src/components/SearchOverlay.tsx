@@ -44,7 +44,7 @@ export default function SearchOverlay({ open, onClose }: { open: boolean; onClos
         role="dialog"
         aria-modal="true"
         aria-label="Search jewellery"
-        className={`fixed inset-x-0 top-0 z-[71] border-b border-gold/25 bg-ivory shadow-[0_30px_60px_-30px_rgba(120,90,40,0.5)] transition-transform duration-500 ${
+        className={`fixed inset-x-0 top-0 z-[71] border-b border-gold/25 bg-ivory shadow-[0_30px_60px_-30px_rgba(123,83,33,0.5)] transition-transform duration-500 ${
           open ? "translate-y-0" : "-translate-y-full"
         }`}
       >
@@ -77,7 +77,7 @@ export default function SearchOverlay({ open, onClose }: { open: boolean; onClos
                 key={s}
                 type="button"
                 onClick={() => go(s)}
-                className="rounded-full border border-gold/35 bg-white px-4 py-2 text-sm text-ink transition-colors hover:border-gold hover:bg-cream"
+                className="rounded-full border border-gold/35 bg-paper px-4 py-2 text-sm text-ink transition-colors hover:border-gold hover:bg-cream"
               >
                 {s}
               </button>

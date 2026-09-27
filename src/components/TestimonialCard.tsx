@@ -22,7 +22,7 @@ export default function TestimonialCard({ testimonial }: { testimonial: Testimon
     .toUpperCase();
 
   return (
-    <figure className="relative flex h-full flex-col rounded-[1.75rem] border border-gold/25 bg-ivory p-7 shadow-[0_25px_60px_-40px_rgba(120,90,40,0.6)] sm:p-8">
+    <figure className="relative flex h-full flex-col rounded-[1.75rem] border border-gold/25 bg-ivory p-7 shadow-[0_25px_60px_-40px_rgba(123,83,33,0.6)] sm:p-8">
       <span aria-hidden className="text-gilded absolute right-7 top-3 font-display text-8xl leading-none">
         &ldquo;
       </span>
@@ -31,7 +31,7 @@ export default function TestimonialCard({ testimonial }: { testimonial: Testimon
         {testimonial.message}
       </blockquote>
       <figcaption className="mt-7 flex items-center gap-3 border-t border-gold/20 pt-5">
-        <span className="relative flex h-12 w-12 shrink-0 items-center justify-center overflow-hidden rounded-full bg-[radial-gradient(circle_at_30%_25%,#fdf1d3,#d9b262)] font-caps text-sm text-ink ring-2 ring-white">
+        <span className="relative flex h-12 w-12 shrink-0 items-center justify-center overflow-hidden rounded-full bg-[radial-gradient(circle_at_30%_25%,#f3eadd,#cdb497)] font-caps text-sm text-ink ring-2 ring-paper">
           {testimonial.photo ? (
             <Image src={testimonial.photo} alt="" fill sizes="48px" className="object-cover" />
           ) : (

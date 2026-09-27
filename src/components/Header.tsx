@@ -137,7 +137,7 @@ export default function Header() {
         {metals.map((metal) => (
           <div
             key={metal.slug}
-            className={`absolute inset-x-0 top-full hidden border-b lg:block border-gold/20 bg-ivory text-ink shadow-[0_30px_60px_-30px_rgba(120,90,40,0.35)] transition-all duration-500 ${
+            className={`absolute inset-x-0 top-full hidden border-b lg:block border-gold/20 bg-ivory text-ink shadow-[0_30px_60px_-30px_rgba(123,83,33,0.35)] transition-all duration-500 ${
               openMenu === metal.slug
                 ? "visible translate-y-0 opacity-100"
                 : "invisible -translate-y-2 opacity-0"
@@ -172,8 +172,8 @@ export default function Header() {
                 href={`/collections/${metal.slug}`}
                 className={`sheen group relative flex min-h-[15rem] flex-col justify-end overflow-hidden rounded-2xl p-7 ${
                   metal.slug === "gold"
-                    ? "bg-[radial-gradient(circle_at_30%_20%,#fbeecb,#dcb465_45%,#b08132)] text-ink"
-                    : "bg-[radial-gradient(circle_at_30%_20%,#ffffff,#d9dde3_40%,#2a2f38)] text-ivory"
+                    ? "bg-[radial-gradient(circle_at_30%_20%,#f3eadd,#dbc6ab_45%,#cdb497)] text-ink"
+                    : "bg-[radial-gradient(circle_at_30%_20%,#f6eff4,#eadde6_40%,#c39fba)] text-ink"
                 }`}
               >
                 <JewelIcon

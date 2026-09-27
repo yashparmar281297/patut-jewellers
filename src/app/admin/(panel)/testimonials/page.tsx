@@ -29,13 +29,13 @@ export default async function AdminTestimonialsPage() {
       {error && <p className="mb-6 rounded-xl bg-red-50 px-4 py-3 text-sm text-red-700">{error.message}</p>}
 
       {count === 0 ? (
-        <div className="rounded-2xl border border-gold/25 bg-white p-10 text-center text-muted">
+        <div className="rounded-2xl border border-gold/25 bg-paper p-10 text-center text-muted">
           No testimonials yet. Add your customers&apos; feedback to show it on the website.
         </div>
       ) : (
         <ul className="grid gap-4 md:grid-cols-2">
           {testimonials!.map((t) => (
-            <li key={t.id} className="flex flex-col rounded-2xl border border-gold/25 bg-white p-5">
+            <li key={t.id} className="flex flex-col rounded-2xl border border-gold/25 bg-paper p-5">
               <div className="flex items-center gap-3">
                 <span className="relative flex h-11 w-11 shrink-0 items-center justify-center overflow-hidden rounded-full bg-cream font-caps text-xs text-gold-deep">
                   {t.photo ? (

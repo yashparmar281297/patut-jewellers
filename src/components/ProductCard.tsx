@@ -15,8 +15,8 @@ export default function ProductCard({ product }: { product: Product }) {
         <div
           className={`sheen relative aspect-[4/5] overflow-hidden rounded-2xl ${
             isDiamond
-              ? "bg-[radial-gradient(circle_at_50%_35%,#ffffff,#eef0f3_45%,#d7dbe1)]"
-              : "bg-[radial-gradient(circle_at_50%_35%,#fffaf0,#f1e5d0_50%,#e2cda7)]"
+              ? "bg-[radial-gradient(circle_at_50%_35%,#f6eff4,#eadde6_45%,#dcc6d5)]"
+              : "bg-[radial-gradient(circle_at_50%_35%,#f3eadd,#e7d5bc_50%,#dbc6ab)]"
           }`}
         >
           {cover ? (
@@ -45,13 +45,13 @@ export default function ProductCard({ product }: { product: Product }) {
                 category={product.category}
                 metal={product.metal}
                 className={`absolute inset-0 m-auto h-3/5 w-3/5 transition-transform duration-700 ease-[var(--ease-luxe)] [transform:translateZ(40px)] group-hover:scale-110 ${
-                  isDiamond ? "text-[#8b8f97]" : "text-gold"
+                  isDiamond ? "text-[#8a6582]" : "text-gold"
                 }`}
               />
             </>
           )}
           {(product.isNew || product.isBestseller) && (
-            <span className="absolute left-4 top-4 rounded-full bg-gold px-3 py-1 font-caps text-[9px] tracking-[0.25em] text-ink shadow-sm">
+            <span className="absolute left-4 top-4 rounded-full bg-gold px-3 py-1 font-caps text-[9px] tracking-[0.25em] text-paper shadow-sm">
               {product.isNew ? "New" : "Bestseller"}
             </span>
           )}

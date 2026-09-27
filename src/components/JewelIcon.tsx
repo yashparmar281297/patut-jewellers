@@ -81,7 +81,7 @@ export default function JewelIcon({ category, metal = "gold", className }: Props
         <>
           <ellipse cx={60} cy={72} rx={30} ry={30} {...common} strokeWidth={2.4} />
           <ellipse cx={60} cy={72} rx={22} ry={22} {...common} strokeWidth={1} />
-          <rect x={42} y={30} width={36} height={24} rx={6} {...common} fill="#fffaf0" />
+          <rect x={42} y={30} width={36} height={24} rx={6} {...common} fill="#f3eadd" />
           <rect x={47} y={35} width={26} height={14} rx={3} {...common} strokeWidth={0.8} />
           {metal === "diamond" ? (
             [52, 60, 68].map((x) => <Stone key={x} x={x} y={42} r={3} metal={metal} />)
@@ -139,7 +139,7 @@ export default function JewelIcon({ category, metal = "gold", className }: Props
           <circle cx={60} cy={20} r={8} {...common} />
           <Stone x={60} y={20} r={4} metal={metal} />
           <path d="M60 28 v8" {...common} />
-          <path d="M34 78 C34 50 46 38 60 38 C74 38 86 50 86 78 Z" {...common} fill="#fffaf0" />
+          <path d="M34 78 C34 50 46 38 60 38 C74 38 86 50 86 78 Z" {...common} fill="#f3eadd" />
           <path d="M40 66 H80 M44 54 H76" {...common} strokeWidth={0.7} />
           {[42, 50, 58, 66, 74].map((x) => (
             <Stone key={x} x={x + 2} y={60} r={1.6} metal={metal} />
@@ -218,8 +218,8 @@ export default function JewelIcon({ category, metal = "gold", className }: Props
             );
           })}
           <path d="M60 81 v5" {...common} />
-          <circle cx={52} cy={96} r={8} {...common} fill="#fffaf0" />
-          <circle cx={68} cy={96} r={8} {...common} fill="#fffaf0" />
+          <circle cx={52} cy={96} r={8} {...common} fill="#f3eadd" />
+          <circle cx={68} cy={96} r={8} {...common} fill="#f3eadd" />
           <Stone x={52} y={96} r={3.4} metal={metal} />
           <Stone x={68} y={96} r={3.4} metal={metal} />
         </>
@@ -243,7 +243,7 @@ export default function JewelIcon({ category, metal = "gold", className }: Props
               />
             );
           })}
-          <rect x={92} y={56} width={10} height={12} rx={2} {...common} fill="#fffaf0" />
+          <rect x={92} y={56} width={10} height={12} rx={2} {...common} fill="#f3eadd" />
         </>
       );
       break;
@@ -259,14 +259,14 @@ export default function JewelIcon({ category, metal = "gold", className }: Props
               <circle cx={106 - 34 * t} cy={22 + 36 * Math.sin((Math.PI / 2) * t)} r={2.2} fill="#1a1210" />
             </g>
           ))}
-          <path d="M34 60 Q60 50 86 60 L86 80 Q60 90 34 80 Z" {...common} fill="#fffaf0" />
+          <path d="M34 60 Q60 50 86 60 L86 80 Q60 90 34 80 Z" {...common} fill="#f3eadd" />
           <path d="M34 60 Q60 70 86 60" {...common} strokeWidth={0.8} />
           <path d="M46 57 V84 M60 55 V86 M74 57 V84" {...common} strokeWidth={0.7} />
           {[40, 53, 67, 80].map((x) => (
             <Stone key={x} x={x} y={71} r={2.2} metal={metal} />
           ))}
-          <ellipse cx={30} cy={70} rx={4} ry={11} {...common} fill="#fffaf0" />
-          <ellipse cx={90} cy={70} rx={4} ry={11} {...common} fill="#fffaf0" />
+          <ellipse cx={30} cy={70} rx={4} ry={11} {...common} fill="#f3eadd" />
+          <ellipse cx={90} cy={70} rx={4} ry={11} {...common} fill="#f3eadd" />
           {[44, 60, 76].map((x) => (
             <g key={x}>
               <path d={`M${x} ${x === 60 ? 88 : 86} v6`} {...common} strokeWidth={0.8} />
@@ -285,7 +285,7 @@ export default function JewelIcon({ category, metal = "gold", className }: Props
           {Array.from({ length: 7 }).map((_, i) => (
             <ellipse key={i} cx={60} cy={20 + i * 6} rx={2} ry={3} {...common} strokeWidth={0.9} />
           ))}
-          <circle cx={60} cy={72} r={17} {...common} fill="#fffaf0" />
+          <circle cx={60} cy={72} r={17} {...common} fill="#f3eadd" />
           <circle cx={60} cy={72} r={11} {...common} strokeWidth={0.8} />
           {Array.from({ length: 8 }).map((_, i) => {
             const a = (Math.PI * 2 * i) / 8;
@@ -293,7 +293,7 @@ export default function JewelIcon({ category, metal = "gold", className }: Props
           })}
           <Stone x={60} y={72} r={5.5} metal={metal} />
           <path d="M60 89 v4" {...common} />
-          <path d="M60 93 C54 100 54 106 60 110 C66 106 66 100 60 93 Z" {...common} fill="#fffaf0" />
+          <path d="M60 93 C54 100 54 106 60 110 C66 106 66 100 60 93 Z" {...common} fill="#f3eadd" />
           <Stone x={60} y={103} r={2.4} metal={metal} />
         </>
       );
@@ -314,7 +314,7 @@ export default function JewelIcon({ category, metal = "gold", className }: Props
             return <Stone key={deg} x={58 + Math.cos(a) * 32} y={62 + Math.sin(a) * 32} r={2.8} metal={metal} />;
           })}
           {/* Centre ornament at the bottom of the ring with hanging pearls */}
-          <circle cx={58} cy={94} r={7.5} {...common} fill="#fffaf0" />
+          <circle cx={58} cy={94} r={7.5} {...common} fill="#f3eadd" />
           {Array.from({ length: 6 }).map((_, i) => {
             const a = (Math.PI * 2 * i) / 6;
             return <circle key={i} cx={58 + Math.cos(a) * 5} cy={94 + Math.sin(a) * 5} r={1.3} fill="currentColor" opacity={0.8} />;

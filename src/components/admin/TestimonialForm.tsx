@@ -60,7 +60,7 @@ export default function TestimonialForm({ initial }: { initial: TestimonialFormV
     <form onSubmit={onSubmit} className="grid gap-6 lg:grid-cols-2">
       {formError && <p className="rounded-xl bg-red-50 px-4 py-3 text-sm text-red-700 lg:col-span-2">{formError}</p>}
 
-      <section className="space-y-5 rounded-3xl border border-gold/20 bg-white p-5 sm:p-7">
+      <section className="space-y-5 rounded-3xl border border-gold/20 bg-paper p-5 sm:p-7">
         <div className="grid gap-4 sm:grid-cols-2">
           <Field label="Customer name" error={fieldErrors.customerName}>
             <input
@@ -115,7 +115,7 @@ export default function TestimonialForm({ initial }: { initial: TestimonialFormV
         </Field>
       </section>
 
-      <section className="space-y-5 rounded-3xl border border-gold/20 bg-white p-5 sm:p-7">
+      <section className="space-y-5 rounded-3xl border border-gold/20 bg-paper p-5 sm:p-7">
         <ImageField
           label="Customer photo (optional)"
           folder="testimonials"

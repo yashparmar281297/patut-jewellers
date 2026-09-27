@@ -28,7 +28,7 @@ export default async function SearchPage(props: PageProps<"/search">) {
           placeholder="Search rings, jhumka, mangalsutra…"
           className="min-w-0 flex-1 bg-transparent font-display text-3xl text-ink outline-none placeholder:text-muted/60 sm:text-4xl"
         />
-        <button type="submit" className="bg-gold shrink-0 rounded-full px-5 py-2.5 font-caps text-[11px] tracking-[0.2em] text-ink">
+        <button type="submit" className="bg-gold shrink-0 rounded-full px-5 py-2.5 font-caps text-[11px] tracking-[0.2em] text-paper">
           Search
         </button>
       </form>
@@ -55,7 +55,7 @@ export default async function SearchPage(props: PageProps<"/search">) {
           <p className="mt-6 font-caps text-[10px] tracking-[0.3em] text-muted">Browse by category</p>
           <div className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
             {categories.map((c) => (
-              <div key={c.slug} className="flex items-center gap-3 rounded-2xl border border-gold/25 bg-white p-3">
+              <div key={c.slug} className="flex items-center gap-3 rounded-2xl border border-gold/25 bg-paper p-3">
                 <JewelIcon category={c.slug} className="h-10 w-10 shrink-0 text-gold" />
                 <div className="min-w-0">
                   <p className="truncate font-display text-lg text-ink">{c.name}</p>

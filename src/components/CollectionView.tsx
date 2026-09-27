@@ -19,8 +19,8 @@ export default function CollectionView({ metal, category, products: items }: Pro
       <section
         className={`grain relative overflow-hidden ${
           isGold
-            ? "bg-[radial-gradient(ellipse_at_75%_40%,#fff6dc,#ecd08f_35%,#d3a95a_75%,#bb8c3c)] text-ink"
-            : "bg-[radial-gradient(ellipse_at_75%_40%,#ffffff,#eef1f4_35%,#cfd5dd_75%,#b9c1cb)] text-ink"
+            ? "bg-[radial-gradient(ellipse_at_75%_40%,#f3eadd,#dbc6ab_35%,#cdb497_75%,#cdb497)] text-ink"
+            : "bg-[radial-gradient(ellipse_at_75%_40%,#f6eff4,#eadde6_35%,#dcc6d5_75%,#c39fba)] text-ink"
         }`}
       >
         <div className="relative mx-auto flex max-w-7xl flex-col gap-6 px-4 py-10 sm:px-6 sm:py-16 md:flex-row md:items-center md:justify-between lg:px-10 lg:py-24">
@@ -56,7 +56,7 @@ export default function CollectionView({ metal, category, products: items }: Pro
           <JewelIcon
             category={category?.slug ?? (isGold ? "necklace" : "ladies-ring")}
             metal={metal.slug}
-            className={`animate-float h-28 w-28 shrink-0 self-center sm:h-56 sm:w-56 ${isGold ? "text-[#6f4c14]" : "text-[#4a515c]"}`}
+            className={`animate-float h-28 w-28 shrink-0 self-center sm:h-56 sm:w-56 ${isGold ? "text-[#7b5321]" : "text-[#6e4d66]"}`}
           />
         </div>
       </section>

@@ -23,8 +23,8 @@ export default async function BridalPage(props: PageProps<"/bridal">) {
 
   return (
     <>
-      <section className="relative overflow-hidden bg-[radial-gradient(ellipse_at_70%_40%,#fffdf8,#f6e8cc_45%,#e6cc98)]">
-        <div className="pointer-events-none absolute -right-24 top-0 h-[26rem] w-[26rem] max-w-full rounded-full bg-white/60 blur-[100px]" />
+      <section className="relative overflow-hidden bg-[radial-gradient(ellipse_at_70%_40%,#f3eadd,#e7d5bc_45%,#dbc6ab)]">
+        <div className="pointer-events-none absolute -right-24 top-0 h-[26rem] w-[26rem] max-w-full rounded-full bg-paper/60 blur-[100px]" />
         <div className="relative mx-auto flex max-w-7xl flex-col items-center gap-8 px-4 py-12 text-center sm:px-6 md:flex-row md:justify-between md:py-20 md:text-left lg:px-10">
           <div>
             <nav className="font-caps text-[10px] tracking-[0.3em] text-ink/60">
@@ -45,7 +45,7 @@ export default async function BridalPage(props: PageProps<"/bridal">) {
             {(["tika", "nathiya", "necklace"] as const).map((slug, i) => (
               <div
                 key={slug}
-                className={`flex h-24 w-24 items-center justify-center rounded-full bg-white/70 shadow-[0_20px_40px_-25px_rgba(120,90,40,0.7)] ring-1 ring-gold/30 sm:h-32 sm:w-32 ${
+                className={`flex h-24 w-24 items-center justify-center rounded-full bg-paper/70 shadow-[0_20px_40px_-25px_rgba(123,83,33,0.7)] ring-1 ring-gold/30 sm:h-32 sm:w-32 ${
                   i === 1 ? "animate-float" : "translate-y-4"
                 }`}
               >
@@ -61,7 +61,7 @@ export default async function BridalPage(props: PageProps<"/bridal">) {
           <Link
             href="/bridal"
             className={`shrink-0 rounded-full border px-4 py-2 font-caps text-[10px] tracking-[0.2em] transition-colors ${
-              !category ? "border-gold bg-gold text-ink" : "border-gold/30 text-ink hover:border-gold"
+              !category ? "border-gold bg-gold text-paper" : "border-gold/30 text-ink hover:border-gold"
             }`}
           >
             All Bridal
@@ -71,7 +71,7 @@ export default async function BridalPage(props: PageProps<"/bridal">) {
               key={slug}
               href={`/bridal?category=${slug}`}
               className={`flex shrink-0 items-center gap-2 rounded-full border py-1.5 pl-2 pr-4 font-caps text-[10px] tracking-[0.2em] transition-colors ${
-                category === slug ? "border-gold bg-gold text-ink" : "border-gold/30 text-ink hover:border-gold"
+                category === slug ? "border-gold bg-gold text-paper" : "border-gold/30 text-ink hover:border-gold"
               }`}
             >
               <JewelIcon category={slug} className="h-6 w-6 text-gold-deep" />
@@ -106,8 +106,8 @@ export default async function BridalPage(props: PageProps<"/bridal">) {
         )}
 
         {site.whatsapp && (
-          <div className="bg-gold mt-16 flex flex-col items-center gap-4 rounded-[2rem] px-6 py-10 text-center text-ink sm:mt-20 sm:py-12">
-            <p className="font-caps text-[11px] tracking-[0.35em] text-ink/70">Bridal Consultation</p>
+          <div className="bg-gold mt-16 flex flex-col items-center gap-4 rounded-[2rem] px-6 py-10 text-center text-paper sm:mt-20 sm:py-12">
+            <p className="font-caps text-[11px] tracking-[0.35em] text-paper/75">Bridal Consultation</p>
             <p className="max-w-xl font-display text-3xl leading-tight sm:text-4xl">
               Planning your wedding jewellery? Let us help you put the complete look together.
             </p>

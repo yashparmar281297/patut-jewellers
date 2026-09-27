@@ -180,9 +180,9 @@ export default function JewelScene() {
         <FloatingBand position={[-1.9, -1.3, -1.2]} scale={0.32} />
       </Responsive>
 
-      <Sparkles count={60} scale={[7, 5, 3]} size={3} speed={0.35} color="#c9973f" opacity={0.9} />
+      <Sparkles count={60} scale={[7, 5, 3]} size={3} speed={0.35} color="#c39fba" opacity={0.95} />
 
-      <ContactShadows position={[0, -1.9, 0]} opacity={0.35} scale={8} blur={2.8} far={3} color="#7a5a24" />
+      <ContactShadows position={[0, -1.9, 0]} opacity={0.35} scale={8} blur={2.8} far={3} color="#7b5321" />
       <StudioLights />
     </Canvas>
   );

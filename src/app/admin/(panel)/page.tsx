@@ -51,11 +51,11 @@ export default async function AdminDashboardPage() {
             </>
           );
           return stat.href ? (
-            <Link key={stat.label} href={stat.href} className="rounded-2xl border border-gold/25 bg-white p-5 transition hover:border-gold">
+            <Link key={stat.label} href={stat.href} className="rounded-2xl border border-gold/25 bg-paper p-5 transition hover:border-gold">
               {body}
             </Link>
           ) : (
-            <div key={stat.label} className="rounded-2xl border border-gold/25 bg-white p-5">
+            <div key={stat.label} className="rounded-2xl border border-gold/25 bg-paper p-5">
               {body}
             </div>
           );
@@ -67,15 +67,15 @@ export default async function AdminDashboardPage() {
           <Link
             key={tile.href}
             href={tile.href}
-            className={`group rounded-2xl border p-6 transition hover:-translate-y-1 hover:shadow-[0_20px_40px_-25px_rgba(120,90,40,0.6)] ${
-              tile.primary ? "bg-gold border-transparent" : "border-gold/25 bg-white hover:border-gold"
+            className={`group rounded-2xl border p-6 transition hover:-translate-y-1 hover:shadow-[0_20px_40px_-25px_rgba(123,83,33,0.6)] ${
+              tile.primary ? "bg-gold border-transparent" : "border-gold/25 bg-paper hover:border-gold"
             }`}
           >
-            <p className={`text-sm ${tile.primary ? "text-ink/70" : "text-muted"}`}>{tile.section}</p>
-            <h2 className="mt-2 font-display text-2xl text-ink">
+            <p className={`text-sm ${tile.primary ? "text-paper/75" : "text-muted"}`}>{tile.section}</p>
+            <h2 className={`mt-2 font-display text-2xl ${tile.primary ? "text-paper" : "text-ink"}`}>
               {tile.title} <span className="inline-block transition-transform group-hover:translate-x-1">→</span>
             </h2>
-            <p className={`mt-2 text-sm ${tile.primary ? "text-ink/80" : "text-muted"}`}>{tile.text}</p>
+            <p className={`mt-2 text-sm ${tile.primary ? "text-paper/85" : "text-muted"}`}>{tile.text}</p>
           </Link>
         ))}
       </div>

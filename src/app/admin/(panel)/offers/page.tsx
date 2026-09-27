@@ -33,14 +33,14 @@ export default async function AdminOffersPage() {
       {error && <p className="mb-6 rounded-xl bg-red-50 px-4 py-3 text-sm text-red-700">{error.message}</p>}
 
       {count === 0 ? (
-        <div className="rounded-2xl border border-gold/25 bg-white p-10 text-center text-muted">No offers yet.</div>
+        <div className="rounded-2xl border border-gold/25 bg-paper p-10 text-center text-muted">No offers yet.</div>
       ) : (
         <ul className="grid gap-4 md:grid-cols-2">
           {offers!.map((offer) => {
             const expired = offer.valid_until !== null && offer.valid_until < today;
             return (
-              <li key={offer.id} className="flex gap-4 rounded-2xl border border-gold/25 bg-white p-4">
-                <div className="relative h-24 w-24 shrink-0 overflow-hidden rounded-xl bg-[radial-gradient(circle_at_30%_20%,#fdf1d3,#e2bf78)] sm:w-28">
+              <li key={offer.id} className="flex gap-4 rounded-2xl border border-gold/25 bg-paper p-4">
+                <div className="relative h-24 w-24 shrink-0 overflow-hidden rounded-xl bg-[radial-gradient(circle_at_30%_20%,#f3eadd,#dbc6ab)] sm:w-28">
                   {offer.image && <Image src={mediaUrl(offer.image)} alt="" fill sizes="112px" className="object-cover" />}
                 </div>
                 <div className="flex min-w-0 flex-1 flex-col">

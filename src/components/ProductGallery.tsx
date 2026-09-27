@@ -26,7 +26,7 @@ export default function ProductGallery({ images, name }: Props) {
   return (
     <div>
       <div
-        className="relative aspect-square cursor-zoom-in overflow-hidden rounded-[2rem] bg-cream shadow-[0_40px_80px_-40px_rgba(60,40,15,0.45)]"
+        className="relative aspect-square cursor-zoom-in overflow-hidden rounded-[2rem] bg-cream shadow-[0_40px_80px_-40px_rgba(123,83,33,0.45)]"
         onPointerMove={onMove}
         onPointerLeave={() => setZoom(null)}
       >

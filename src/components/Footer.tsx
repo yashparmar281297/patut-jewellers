@@ -13,8 +13,8 @@ export default function Footer() {
   ].filter(Boolean) as { label: string; value: string; href?: string }[];
 
   return (
-    <footer className="relative overflow-hidden border-t border-gold/25 bg-[linear-gradient(180deg,#f4e9d6,#ecdcbd)] text-ink/80">
-      <div className="pointer-events-none absolute -top-40 left-1/2 h-80 w-[60rem] max-w-full -translate-x-1/2 rounded-full bg-white/50 blur-3xl" />
+    <footer className="relative overflow-hidden border-t border-gold/25 bg-[linear-gradient(180deg,#e7d5bc,#dbc6ab)] text-ink/80">
+      <div className="pointer-events-none absolute -top-40 left-1/2 h-80 w-[60rem] max-w-full -translate-x-1/2 rounded-full bg-paper/50 blur-3xl" />
       <div className="relative mx-auto max-w-7xl px-4 pb-24 pt-16 sm:px-6 sm:pb-10 lg:px-10 lg:pt-20">
         <div className="grid grid-cols-2 gap-x-6 gap-y-12 lg:grid-cols-[1.3fr_1fr_1fr_1.2fr]">
           <div className="col-span-2 lg:col-span-1">

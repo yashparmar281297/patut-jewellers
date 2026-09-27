@@ -1,5 +1,5 @@
 export const inputClass =
-  "mt-1.5 w-full rounded-xl border bg-white px-4 py-3 text-ink outline-none transition focus:border-gold focus:ring-2 focus:ring-gold/20";
+  "mt-1.5 w-full rounded-xl border bg-paper px-4 py-3 text-ink outline-none transition focus:border-gold focus:ring-2 focus:ring-gold/20";
 
 export function borderFor(errors: Record<string, string>, key: string) {
   return errors[key] ? "border-red-400" : "border-gold/30";
@@ -48,7 +48,7 @@ export function Toggle({
         type="checkbox"
         checked={checked}
         onChange={(e) => onChange(e.target.checked)}
-        className="h-4 w-4 accent-[#b8893b]"
+        className="h-4 w-4 accent-[#7b5321]"
       />
       {label}
     </label>
@@ -73,7 +73,7 @@ export function FormActions({
       <button
         type="submit"
         disabled={busy}
-        className="bg-gold rounded-full px-8 py-3 font-caps text-xs tracking-[0.2em] text-ink disabled:opacity-50"
+        className="bg-gold rounded-full px-8 py-3 font-caps text-xs tracking-[0.2em] text-paper disabled:opacity-50"
       >
         {saving ? "Saving…" : saveLabel}
       </button>

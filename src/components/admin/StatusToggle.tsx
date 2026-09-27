@@ -36,7 +36,7 @@ export default function StatusToggle({ id, value, action, onLabel = "Live", offL
     >
       <span className={`relative h-6 w-11 rounded-full transition-colors ${optimistic ? "bg-gold" : "bg-sand"}`}>
         <span
-          className={`absolute top-0.5 h-5 w-5 rounded-full bg-white shadow transition-transform ${
+          className={`absolute top-0.5 h-5 w-5 rounded-full bg-paper shadow transition-transform ${
             optimistic ? "translate-x-5.5" : "translate-x-0.5"
           }`}
         />

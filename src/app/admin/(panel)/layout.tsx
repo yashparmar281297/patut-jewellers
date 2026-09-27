@@ -11,7 +11,7 @@ export default async function AdminPanelLayout({ children }: { children: React.R
 
   return (
     <>
-      <header className="sticky top-0 z-40 border-b border-gold/25 bg-white/90 backdrop-blur-md">
+      <header className="sticky top-0 z-40 border-b border-gold/25 bg-paper/90 backdrop-blur-md">
         <div className="mx-auto flex h-16 max-w-7xl items-center justify-between gap-4 px-4 sm:px-6">
           <Link href="/admin" className="flex items-center gap-3">
             <span className="relative h-10 w-10 overflow-hidden rounded-full ring-1 ring-gold/50">

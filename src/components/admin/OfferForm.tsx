@@ -60,7 +60,7 @@ export default function OfferForm({ initial }: { initial: OfferFormValues }) {
     <form onSubmit={onSubmit} className="grid gap-6 lg:grid-cols-2">
       {formError && <p className="rounded-xl bg-red-50 px-4 py-3 text-sm text-red-700 lg:col-span-2">{formError}</p>}
 
-      <section className="space-y-5 rounded-3xl border border-gold/20 bg-white p-5 sm:p-7">
+      <section className="space-y-5 rounded-3xl border border-gold/20 bg-paper p-5 sm:p-7">
         <Field label="Offer title" error={fieldErrors.title}>
           <input
             value={values.title}
@@ -91,7 +91,7 @@ export default function OfferForm({ initial }: { initial: OfferFormValues }) {
         </Field>
       </section>
 
-      <section className="space-y-5 rounded-3xl border border-gold/20 bg-white p-5 sm:p-7">
+      <section className="space-y-5 rounded-3xl border border-gold/20 bg-paper p-5 sm:p-7">
         <ImageField
           label="Offer photo (optional)"
           folder="offers"
