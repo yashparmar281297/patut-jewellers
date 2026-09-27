@@ -31,6 +31,7 @@ export interface ProductFormValues {
   images: string[];
   isNew: boolean;
   isBestseller: boolean;
+  isBridal: boolean;
   isPublished: boolean;
   sortOrder: string;
 }
@@ -130,6 +131,7 @@ export default function ProductForm({ initial }: { initial: ProductFormValues })
       images: photos.filter((p) => p.status === "done" && p.path).map((p) => p.path!),
       isNew: values.isNew,
       isBestseller: values.isBestseller,
+      isBridal: values.isBridal,
       isPublished: values.isPublished,
       sortOrder: values.sortOrder.trim() === "" ? 0 : Number(values.sortOrder),
     };
@@ -397,12 +399,13 @@ export default function ProductForm({ initial }: { initial: ProductFormValues })
           />
         </Field>
 
-        <div className="grid grid-cols-3 gap-2">
+        <div className="grid grid-cols-2 gap-2">
           {(
             [
               ["isPublished", "Show on website"],
               ["isNew", "New arrival"],
               ["isBestseller", "Bestseller"],
+              ["isBridal", "Bridal collection"],
             ] as const
           ).map(([key, label]) => (
             <Toggle key={key} checked={values[key]} onChange={(checked) => set(key, checked)} label={label} />

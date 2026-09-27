@@ -31,6 +31,7 @@ export type Database = {
           id: string;
           images: string[];
           is_bestseller: boolean;
+          is_bridal: boolean;
           is_new: boolean;
           is_published: boolean;
           metal: string;
@@ -49,6 +50,7 @@ export type Database = {
           id?: string;
           images?: string[];
           is_bestseller?: boolean;
+          is_bridal?: boolean;
           is_new?: boolean;
           is_published?: boolean;
           metal: string;
@@ -67,6 +69,7 @@ export type Database = {
           id?: string;
           images?: string[];
           is_bestseller?: boolean;
+          is_bridal?: boolean;
           is_new?: boolean;
           is_published?: boolean;
           metal?: string;

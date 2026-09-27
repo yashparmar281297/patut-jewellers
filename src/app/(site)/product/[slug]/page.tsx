@@ -8,7 +8,7 @@ import TiltCard from "@/components/TiltCard";
 import WhatsAppIcon from "@/components/WhatsAppIcon";
 import { getCategory, getMetal } from "@/lib/catalog";
 import { getProduct, getProductSlugs, getProducts } from "@/lib/products";
-import { site, whatsappLink } from "@/lib/site";
+import { productWhatsappLink, site } from "@/lib/site";
 
 export const revalidate = 300;
 
@@ -36,22 +36,12 @@ export default async function ProductPage(props: PageProps<"/product/[slug]">) {
   const specs = [
     ["Metal", isDiamond ? "18K Gold" : `${product.purity} Gold`],
     ["Gross weight", `${product.weight} g`],
-    ...(product.diamondCarat ? [["Diamond weight", `${product.diamondCarat} ct`], ["Certification", "IGI / GIA"]] : []),
+    ...(product.diamondCarat ? [["Diamond weight", `${product.diamondCarat} ct`], ["Certification", "IGI"]] : []),
     ["Hallmark", "BIS HUID"],
     ["Category", category.name],
   ];
 
-  const productUrl = site.url ? `${site.url}/product/${product.slug}` : "";
-  const whatsappHref = whatsappLink(
-    [
-      `Hello Patut Jewellers, I am interested in the ${product.name}`,
-      `(${metal.name} ${category.name}, ${product.purity}, ${product.weight} g).`,
-      "Please share the price and more details.",
-      productUrl,
-    ]
-      .filter(Boolean)
-      .join(" "),
-  );
+  const whatsappHref = productWhatsappLink(product.name, product.slug);
 
   return (
     <>
@@ -118,7 +108,7 @@ export default async function ProductPage(props: PageProps<"/product/[slug]">) {
           </p>
 
           <ul className="mt-8 grid grid-cols-2 gap-3 text-sm text-muted">
-            <li>✦ {isDiamond ? "Certified diamonds" : "6-digit HUID hallmarked"}</li>
+            <li>✦ {isDiamond ? "IGI certified diamonds" : "6-digit HUID hallmarked"}</li>
             <li>✦ Easy gold exchange</li>
             <li>✦ Custom orders welcome</li>
             <li>✦ Try it at our store</li>

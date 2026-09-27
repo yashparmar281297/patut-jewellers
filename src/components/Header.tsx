@@ -3,11 +3,12 @@
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import AnnouncementBar from "@/components/AnnouncementBar";
 import JewelIcon from "@/components/JewelIcon";
+import SearchOverlay, { SearchIcon } from "@/components/SearchOverlay";
 import { categories, metals, type MetalSlug } from "@/lib/catalog";
-import { whatsappLink } from "@/lib/site";
+import { generalWhatsappLink } from "@/lib/site";
 
 export default function Header() {
   const pathname = usePathname();
@@ -15,6 +16,8 @@ export default function Header() {
   const [openMenu, setOpenMenu] = useState<MetalSlug | null>(null);
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [drawerMetal, setDrawerMetal] = useState<MetalSlug | null>("gold");
+  const [searchOpen, setSearchOpen] = useState(false);
+  const closeSearch = useCallback(() => setSearchOpen(false), []);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 40);
@@ -29,6 +32,7 @@ export default function Header() {
     setLastPath(pathname);
     setOpenMenu(null);
     setDrawerOpen(false);
+    setSearchOpen(false);
   }
 
   useEffect(() => {
@@ -41,6 +45,7 @@ export default function Header() {
   return (
     <>
       <AnnouncementBar />
+      <SearchOverlay open={searchOpen} onClose={closeSearch} />
 
       <header
         className={`sticky top-0 z-50 transition-colors duration-500 ${
@@ -71,7 +76,7 @@ export default function Header() {
               </button>
             ))}
             <Link
-              href="/#bridal"
+              href="/bridal"
               onMouseEnter={() => setOpenMenu(null)}
               className="font-caps text-[13px] tracking-[0.22em] hover:text-gold"
             >
@@ -79,16 +84,16 @@ export default function Header() {
             </Link>
           </nav>
 
-          <button
-            type="button"
-            onClick={() => setDrawerOpen(true)}
-            className="justify-self-start p-2 lg:hidden"
-            aria-label="Open menu"
-          >
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.3">
-              <path d="M3 7h18M3 12h12M3 17h18" />
-            </svg>
-          </button>
+          <div className="-ml-2 flex items-center justify-self-start lg:hidden">
+            <button type="button" onClick={() => setDrawerOpen(true)} className="p-2" aria-label="Open menu">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.3">
+                <path d="M3 7h18M3 12h12M3 17h18" />
+              </svg>
+            </button>
+            <button type="button" onClick={() => setSearchOpen(true)} className="p-2" aria-label="Search">
+              <SearchIcon className="h-[22px] w-[22px]" />
+            </button>
+          </div>
 
           {/* Logo */}
           <Link href="/" className="flex items-center gap-3" aria-label="Patut Jewellers home">
@@ -103,6 +108,14 @@ export default function Header() {
 
           {/* Right nav */}
           <nav className="flex items-center justify-end gap-6">
+            <button
+              type="button"
+              onClick={() => setSearchOpen(true)}
+              className="hidden items-center gap-2 font-caps text-[13px] tracking-[0.22em] hover:text-gold lg:flex"
+            >
+              <SearchIcon className="h-[18px] w-[18px]" />
+              Search
+            </button>
             <Link
               href="/#story"
               className="hidden font-caps text-[13px] tracking-[0.22em] hover:text-gold lg:inline"
@@ -110,7 +123,7 @@ export default function Header() {
               Our Story
             </Link>
             <a
-              href={whatsappLink("Hello Patut Jewellers, I would like to book a visit to your store.")}
+              href={generalWhatsappLink()}
               target="_blank"
               rel="noreferrer"
               className="rounded-full border border-gold px-3.5 py-2 font-caps text-[10px] tracking-[0.18em] text-gold-deep transition-colors hover:bg-gold hover:text-ivory sm:px-5 sm:text-[11px]"
@@ -233,7 +246,7 @@ export default function Header() {
           </div>
         ))}
         <div className="flex flex-col gap-1 px-5 py-4 font-caps text-sm tracking-[0.2em]">
-          <Link href="/#bridal" className="py-2">Bridal</Link>
+          <Link href="/bridal" className="py-2">Bridal</Link>
           <Link href="/#story" className="py-2">Our Story</Link>
           <Link href="/#visit" className="py-2">Book a Visit</Link>
         </div>

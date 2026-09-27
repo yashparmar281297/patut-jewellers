@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import JewelIcon from "@/components/JewelIcon";
+import LiveRates from "@/components/LiveRates";
 import OfferCard from "@/components/OfferCard";
 import ProductCard from "@/components/ProductCard";
 import Reveal from "@/components/Reveal";
@@ -11,7 +12,7 @@ import JewelCanvas from "@/components/three/JewelCanvas";
 import { categories, metals, type CategorySlug } from "@/lib/catalog";
 import { getOffers, getTestimonials } from "@/lib/content";
 import { getNewArrivals } from "@/lib/products";
-import { site, whatsappLink } from "@/lib/site";
+import { generalWhatsappLink, site } from "@/lib/site";
 
 function SectionHeading({ eyebrow, title, subtitle }: { eyebrow: string; title: React.ReactNode; subtitle?: string }) {
   return (
@@ -28,13 +29,13 @@ function SectionHeading({ eyebrow, title, subtitle }: { eyebrow: string; title: 
   );
 }
 
-const bridalPieces: CategorySlug[] = ["necklace", "jhumka", "bangles", "mangalsutra"];
+const bridalPieces: CategorySlug[] = ["necklace", "tika", "nathiya", "jhumka"];
 
 const promises = [
   { title: "BIS Hallmarked", text: "6-digit HUID guaranteed on every gold piece — purity you can verify." },
   { title: "Custom Orders", text: "Custom orders welcome. Visit the store and we will craft your design." },
   { title: "Gold Exchange", text: "Easy gold exchange at fair market value, with transparent weighing." },
-  { title: "Certified Diamonds", text: "Natural diamonds graded by IGI / GIA, with certificate in hand." },
+  { title: "Certified Diamonds", text: "IGI certified natural diamonds, with certificate in hand." },
 ];
 
 // Rebuild at most every 5 minutes; saving in the admin panel refreshes immediately.
@@ -106,6 +107,8 @@ export default async function Home() {
         </div>
       </div>
 
+      <LiveRates />
+
       {/* ───────────── Offers ───────────── */}
       {offers.length > 0 && (
         <section id="offers" className="scroll-mt-24 py-20 lg:py-28">
@@ -115,7 +118,7 @@ export default async function Home() {
             </Reveal>
           </div>
           <div className="mx-auto mt-12 max-w-7xl sm:px-6 lg:mt-16 lg:px-10">
-            <div className="flex snap-x snap-mandatory gap-4 overflow-x-auto px-4 pb-4 [scrollbar-width:none] sm:grid sm:grid-cols-2 sm:gap-6 sm:overflow-visible sm:px-0 lg:grid-cols-3">
+            <div className={`flex snap-x snap-mandatory gap-4 overflow-x-auto px-4 pb-4 [scrollbar-width:none] sm:grid sm:grid-cols-2 sm:gap-6 sm:overflow-visible sm:px-0 ${offers.length >= 3 ? "lg:grid-cols-3" : "mx-auto max-w-5xl"}`}>
               {offers.map((offer, i) => (
                 <div key={offer.id} className="w-[82%] shrink-0 snap-center sm:w-auto">
                   <Reveal delay={(i % 3) * 100} className="h-full">
@@ -240,14 +243,14 @@ export default async function Home() {
               For the day you <em className="text-gilded">will always</em> remember
             </h2>
             <p className="mx-auto mt-6 max-w-md leading-relaxed text-muted lg:mx-0">
-              Temple necklaces, swaying jhumkas, rajwadi kadas and a mangalsutra made just for you —
-              curated sets for every ritual, from haldi to vidaai.
+              Tika, nathiya, temple necklaces, swaying jhumkas and a mangalsutra made just for you —
+              the complete bridal look for every ritual, from haldi to vidaai.
             </p>
             <Link
-              href="/collections/gold/mangalsutra"
-              className="mt-8 inline-flex rounded-full border border-gold bg-white/60 px-8 py-4 font-caps text-xs tracking-[0.25em] text-gold-deep transition-colors hover:bg-gold hover:text-ivory"
+              href="/bridal"
+              className="bg-gold mt-8 inline-flex rounded-full px-8 py-4 font-caps text-xs tracking-[0.22em] text-ink shadow-[0_12px_35px_-12px_rgba(184,137,59,0.9)] transition-transform hover:-translate-y-0.5"
             >
-              Explore Mangalsutra
+              Explore Bridal Collection
             </Link>
           </Reveal>
           <div className="grid grid-cols-2 gap-3 pb-10 sm:gap-6">
@@ -255,7 +258,7 @@ export default async function Home() {
               const category = categories.find((c) => c.slug === slug)!;
               return (
                 <Reveal key={slug} delay={i * 120} className={i % 2 ? "translate-y-10" : ""}>
-                  <Link href={`/collections/gold/${slug}`} className="group block">
+                  <Link href={`/bridal?category=${slug}`} className="group block">
                     <div className="sheen relative flex aspect-square flex-col items-center justify-center rounded-3xl border border-gold/30 bg-white/70 shadow-[0_25px_50px_-35px_rgba(120,90,40,0.7)] backdrop-blur-sm transition-colors duration-500 group-hover:border-gold">
                       <JewelIcon category={slug} className="animate-float h-1/2 w-1/2 text-gold" />
                       <p className="mt-2 font-display text-xl text-ink sm:text-2xl">{category.name}</p>
@@ -346,13 +349,26 @@ export default async function Home() {
             </h2>
             <p className="mx-auto mt-6 max-w-lg text-ink/80">
               Book a private viewing with our jewellery consultants and try on pieces in person.
-              {site.address ? ` ${site.address}.` : ""}
             </p>
-            <p className="mt-3 font-caps text-[11px] tracking-[0.3em] text-ink/60">{site.hours}</p>
+            {site.address && (
+              <a
+                href={site.mapUrl}
+                target="_blank"
+                rel="noreferrer"
+                className="mx-auto mt-5 flex max-w-md items-start justify-center gap-2 text-ink hover:underline"
+              >
+                <svg viewBox="0 0 24 24" className="mt-0.5 h-5 w-5 shrink-0" fill="none" stroke="currentColor" strokeWidth="1.6" aria-hidden>
+                  <path d="M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9.5C19 14.8 12 21 12 21Z" />
+                  <circle cx="12" cy="9.5" r="2.5" />
+                </svg>
+                <span>{site.address}</span>
+              </a>
+            )}
+            <p className="mt-3 font-caps text-[11px] tracking-[0.25em] text-ink/70">{site.hours}</p>
             <div className="mt-9 flex flex-wrap items-center justify-center gap-3">
               {site.whatsapp && (
                 <a
-                  href={whatsappLink("Hello Patut Jewellers, I would like to book a visit to your store.")}
+                  href={generalWhatsappLink()}
                   target="_blank"
                   rel="noreferrer"
                   className="inline-flex items-center gap-2.5 rounded-full bg-whatsapp px-7 py-3.5 text-sm font-medium text-white shadow-[0_12px_30px_-10px_rgba(37,211,102,0.9)]"

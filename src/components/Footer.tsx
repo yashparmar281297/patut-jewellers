@@ -2,11 +2,11 @@ import Image from "next/image";
 import Link from "next/link";
 import WhatsAppIcon from "@/components/WhatsAppIcon";
 import { categories, metals } from "@/lib/catalog";
-import { announcements, site, whatsappLink } from "@/lib/site";
+import { announcements, generalWhatsappLink, site } from "@/lib/site";
 
 export default function Footer() {
   const contact = [
-    site.address && { label: "Showroom", value: site.address },
+    site.address && { label: "Showroom", value: site.address, href: site.mapUrl },
     site.phone && { label: "Call", value: site.phone, href: `tel:${site.phone.replace(/\s/g, "")}` },
     site.email && { label: "Email", value: site.email, href: `mailto:${site.email}` },
     { label: "Hours", value: site.hours },
@@ -62,7 +62,7 @@ export default function Footer() {
             <p className="font-caps text-xs tracking-[0.3em] text-gold-deep">Connect With Us</p>
             {site.whatsapp && (
               <a
-                href={whatsappLink("Hello Patut Jewellers, I would like to know more about your jewellery.")}
+                href={generalWhatsappLink()}
                 target="_blank"
                 rel="noreferrer"
                 className="mt-5 inline-flex items-center gap-2.5 rounded-full bg-whatsapp px-5 py-3 text-sm font-medium text-white shadow-[0_10px_25px_-10px_rgba(37,211,102,0.8)] transition-transform hover:-translate-y-0.5"
@@ -77,7 +77,14 @@ export default function Footer() {
                   <dt className="font-caps text-[10px] tracking-[0.3em] text-muted">{item.label}</dt>
                   <dd className="mt-1 break-words">
                     {item.href ? (
-                      <a href={item.href} className="hover:text-gold-deep">{item.value}</a>
+                      <a
+                        href={item.href}
+                        target={item.href.startsWith("http") ? "_blank" : undefined}
+                        rel="noreferrer"
+                        className="hover:text-gold-deep"
+                      >
+                        {item.value}
+                      </a>
                     ) : (
                       item.value
                     )}

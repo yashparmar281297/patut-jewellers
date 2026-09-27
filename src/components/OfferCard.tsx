@@ -1,13 +1,20 @@
 import Image from "next/image";
-import WhatsAppIcon from "@/components/WhatsAppIcon";
 import type { Offer } from "@/lib/content";
-import { site, whatsappLink } from "@/lib/site";
 
 function formatDate(date: string) {
   return new Date(`${date}T00:00:00`).toLocaleDateString("en-IN", { day: "numeric", month: "long", year: "numeric" });
 }
 
+/** Big headline for offers without a photo: "100%" / "FREE" from the title, else the card number. */
+function highlightFor(title: string, index: number) {
+  const percent = title.match(/\d+\s?%/)?.[0].replace(/\s/g, "");
+  if (percent) return { big: percent, small: "Off" };
+  if (/\bfree\b/i.test(title)) return { big: "Free", small: "Gift" };
+  return { big: String(index + 1).padStart(2, "0"), small: "" };
+}
+
 export default function OfferCard({ offer, index }: { offer: Offer; index: number }) {
+  const highlight = highlightFor(offer.title, index);
   return (
     <article className="sheen group relative flex h-full flex-col overflow-hidden rounded-[1.75rem] border border-gold/30 bg-[linear-gradient(160deg,#fffaf0,#f4e6cb)] shadow-[0_25px_60px_-35px_rgba(120,90,40,0.55)] transition-transform duration-500 hover:-translate-y-1">
       {offer.image ? (
@@ -22,8 +29,9 @@ export default function OfferCard({ offer, index }: { offer: Offer; index: numbe
         </div>
       ) : (
         <div className="relative flex aspect-[16/7] items-center justify-center overflow-hidden bg-[radial-gradient(circle_at_30%_20%,#fdf1d3,#e2bf78_55%,#c3953f)]">
-          <span className="text-gilded font-display text-7xl italic opacity-90">
-            {String(index + 1).padStart(2, "0")}
+          <span className="flex items-baseline gap-2 text-white drop-shadow-[0_2px_10px_rgba(120,80,20,0.35)]">
+            <span className="font-display text-7xl font-medium italic sm:text-8xl">{highlight.big}</span>
+            {highlight.small && <span className="font-caps text-xl tracking-[0.2em]">{highlight.small}</span>}
           </span>
           <span className="animate-twinkle absolute right-8 top-6 text-2xl text-white">✦</span>
         </div>
@@ -41,17 +49,6 @@ export default function OfferCard({ offer, index }: { offer: Offer; index: numbe
           <p className="mt-4 font-caps text-[10px] tracking-[0.25em] text-gold-deep">
             Valid till {formatDate(offer.validUntil)}
           </p>
-        )}
-        {site.whatsapp && (
-          <a
-            href={whatsappLink(`Hello Patut Jewellers, I would like to know more about your offer: ${offer.title}.`)}
-            target="_blank"
-            rel="noreferrer"
-            className="mt-6 inline-flex items-center justify-center gap-2 self-start rounded-full bg-whatsapp px-5 py-2.5 text-sm font-medium text-white transition-transform hover:-translate-y-0.5"
-          >
-            <WhatsAppIcon className="h-4 w-4" />
-            Ask about this offer
-          </a>
         )}
       </div>
     </article>

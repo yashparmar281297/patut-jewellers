@@ -20,6 +20,7 @@ export default function NewProductPage() {
             images: [],
             isNew: true,
             isBestseller: false,
+            isBridal: false,
             isPublished: true,
             sortOrder: "0",
           }}

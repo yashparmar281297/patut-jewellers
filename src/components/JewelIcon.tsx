@@ -247,6 +247,88 @@ export default function JewelIcon({ category, metal = "gold", className }: Props
         </>
       );
       break;
+
+    case "dholna":
+      // Drum-shaped (dholak) pendant strung on a black-bead thread.
+      art = (
+        <>
+          <path d="M14 22 C22 46 38 56 48 58 M106 22 C98 46 82 56 72 58" {...common} strokeWidth={0.8} />
+          {[0.25, 0.45, 0.65, 0.85].map((t) => (
+            <g key={t}>
+              <circle cx={14 + 34 * t} cy={22 + 36 * Math.sin((Math.PI / 2) * t)} r={2.2} fill="#1a1210" />
+              <circle cx={106 - 34 * t} cy={22 + 36 * Math.sin((Math.PI / 2) * t)} r={2.2} fill="#1a1210" />
+            </g>
+          ))}
+          <path d="M34 60 Q60 50 86 60 L86 80 Q60 90 34 80 Z" {...common} fill="#fffaf0" />
+          <path d="M34 60 Q60 70 86 60" {...common} strokeWidth={0.8} />
+          <path d="M46 57 V84 M60 55 V86 M74 57 V84" {...common} strokeWidth={0.7} />
+          {[40, 53, 67, 80].map((x) => (
+            <Stone key={x} x={x} y={71} r={2.2} metal={metal} />
+          ))}
+          <ellipse cx={30} cy={70} rx={4} ry={11} {...common} fill="#fffaf0" />
+          <ellipse cx={90} cy={70} rx={4} ry={11} {...common} fill="#fffaf0" />
+          {[44, 60, 76].map((x) => (
+            <g key={x}>
+              <path d={`M${x} ${x === 60 ? 88 : 86} v6`} {...common} strokeWidth={0.8} />
+              <Stone x={x} y={x === 60 ? 97 : 95} r={2.6} metal={metal} />
+            </g>
+          ))}
+        </>
+      );
+      break;
+
+    case "tika":
+      // Maang tikka: hair chain ending in a round pendant with a drop.
+      art = (
+        <>
+          <circle cx={60} cy={12} r={4} {...common} />
+          {Array.from({ length: 7 }).map((_, i) => (
+            <ellipse key={i} cx={60} cy={20 + i * 6} rx={2} ry={3} {...common} strokeWidth={0.9} />
+          ))}
+          <circle cx={60} cy={72} r={17} {...common} fill="#fffaf0" />
+          <circle cx={60} cy={72} r={11} {...common} strokeWidth={0.8} />
+          {Array.from({ length: 8 }).map((_, i) => {
+            const a = (Math.PI * 2 * i) / 8;
+            return <Stone key={i} x={60 + Math.cos(a) * 14} y={72 + Math.sin(a) * 14} r={1.8} metal={metal} />;
+          })}
+          <Stone x={60} y={72} r={5.5} metal={metal} />
+          <path d="M60 89 v4" {...common} />
+          <path d="M60 93 C54 100 54 106 60 110 C66 106 66 100 60 93 Z" {...common} fill="#fffaf0" />
+          <Stone x={60} y={103} r={2.4} metal={metal} />
+        </>
+      );
+      break;
+
+    case "nathiya":
+      // Bridal nose ring (nath) with pearls and the support chain.
+      art = (
+        <>
+          {/* Ring: almost a full circle, open at the top right where it passes through the nose */}
+          <path d="M88.1 51.1 A32 32 0 1 1 63.6 30.5" {...common} strokeWidth={2} />
+          <circle cx={88.1} cy={51.1} r={2} fill="currentColor" />
+          {/* Support chain up to the hair hook */}
+          <path d="M63.6 30.5 C74 22 88 17 100 16" {...common} strokeWidth={0.8} strokeDasharray="2 2.4" />
+          <circle cx={103} cy={15} r={3} {...common} />
+          {[20, 45, 135, 160].map((deg) => {
+            const a = (deg * Math.PI) / 180;
+            return <Stone key={deg} x={58 + Math.cos(a) * 32} y={62 + Math.sin(a) * 32} r={2.8} metal={metal} />;
+          })}
+          {/* Centre ornament at the bottom of the ring with hanging pearls */}
+          <circle cx={58} cy={94} r={7.5} {...common} fill="#fffaf0" />
+          {Array.from({ length: 6 }).map((_, i) => {
+            const a = (Math.PI * 2 * i) / 6;
+            return <circle key={i} cx={58 + Math.cos(a) * 5} cy={94 + Math.sin(a) * 5} r={1.3} fill="currentColor" opacity={0.8} />;
+          })}
+          <Stone x={58} y={94} r={2.6} metal={metal} />
+          {[50, 58, 66].map((x) => (
+            <g key={x}>
+              <path d={`M${x} ${x === 58 ? 101.5 : 99} v${x === 58 ? 5 : 4}`} {...common} strokeWidth={0.8} />
+              <circle cx={x} cy={x === 58 ? 109 : 105.5} r={2.6} fill="currentColor" opacity={0.85} />
+            </g>
+          ))}
+        </>
+      );
+      break;
   }
 
   return (

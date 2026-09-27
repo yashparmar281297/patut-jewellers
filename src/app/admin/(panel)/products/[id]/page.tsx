@@ -30,6 +30,7 @@ export default async function EditProductPage(props: PageProps<"/admin/products/
             images: p.images,
             isNew: p.is_new,
             isBestseller: p.is_bestseller,
+            isBridal: p.is_bridal,
             isPublished: p.is_published,
             sortOrder: String(p.sort_order),
           }}

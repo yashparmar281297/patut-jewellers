@@ -3,7 +3,7 @@ import "server-only";
 import { cache } from "react";
 import type { ProductRow } from "@/lib/supabase/database.types";
 import { publicClient as supabase } from "@/lib/supabase/public";
-import { mediaUrl, type CategorySlug, type MetalSlug, type Product } from "@/lib/catalog";
+import { categories, mediaUrl, metals, type CategorySlug, type MetalSlug, type Product } from "@/lib/catalog";
 
 export function toProduct(row: ProductRow): Product {
   return {
@@ -20,6 +20,7 @@ export function toProduct(row: ProductRow): Product {
     isNew: row.is_new,
     isBestseller: row.is_bestseller,
     isPublished: row.is_published,
+    isBridal: row.is_bridal,
   };
 }
 
@@ -73,4 +74,51 @@ export const getProductSlugs = cache(async () => {
   const { data, error } = await supabase.from("products").select("slug").eq("is_published", true);
   if (error) throw new Error(`Could not load product slugs: ${error.message}`);
   return data.map((row) => row.slug);
+});
+
+/** Published pieces tagged for the Bridal collection, optionally within one category. */
+export const getBridalProducts = cache(async (category?: CategorySlug) => {
+  let query = supabase
+    .from("products")
+    .select("*")
+    .eq("is_published", true)
+    .eq("is_bridal", true)
+    .order("sort_order")
+    .order("created_at", { ascending: false });
+  if (category) query = query.eq("category", category);
+
+  const { data, error } = await query;
+  if (error) throw new Error(`Could not load bridal products: ${error.message}`);
+  return data.map(toProduct);
+});
+
+/**
+ * Search published products by name and description, and by category or metal words
+ * ("gold jhumka", "tika", "diamond ring").
+ */
+export const searchProducts = cache(async (rawQuery: string) => {
+  // Keep only characters that are safe inside a PostgREST filter.
+  const q = rawQuery.toLowerCase().replace(/[^a-z0-9\s-]/g, " ").replace(/\s+/g, " ").trim().slice(0, 60);
+  if (!q) return [];
+
+  const words = q.split(" ");
+  const metal = metals.find((m) => words.includes(m.slug))?.slug;
+  const rest = words.filter((w) => w !== metal);
+  const text = rest.join(" ");
+  const matchedCategories = categories
+    .filter((c) => rest.some((w) => w.length > 2 && (c.name.toLowerCase().includes(w) || c.slug.includes(w))))
+    .map((c) => c.slug);
+
+  let query = supabase.from("products").select("*").eq("is_published", true).limit(60);
+  if (metal) query = query.eq("metal", metal);
+
+  const conditions = [];
+  if (text) conditions.push(`name.ilike.%${text}%`, `description.ilike.%${text}%`);
+  if (matchedCategories.length) conditions.push(`category.in.(${matchedCategories.join(",")})`);
+  if (conditions.length) query = query.or(conditions.join(","));
+  else if (!metal) return [];
+
+  const { data, error } = await query.order("sort_order").order("created_at", { ascending: false });
+  if (error) throw new Error(`Could not search products: ${error.message}`);
+  return data.map(toProduct);
 });

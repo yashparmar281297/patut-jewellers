@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import WhatsAppIcon from "@/components/WhatsAppIcon";
-import { site, whatsappLink } from "@/lib/site";
+import { generalWhatsappLink, site } from "@/lib/site";
 
 /** Floating chat button; appears once the visitor scrolls so it never covers the hero. */
 export default function WhatsAppFloat() {
@@ -18,7 +18,7 @@ export default function WhatsAppFloat() {
   if (!site.whatsapp) return null;
   return (
     <a
-      href={whatsappLink("Hello Patut Jewellers, I would like to know more about your jewellery.")}
+      href={generalWhatsappLink()}
       target="_blank"
       rel="noreferrer"
       aria-label="Chat with Patut Jewellers on WhatsApp"

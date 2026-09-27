@@ -9,7 +9,10 @@ export type CategorySlug =
   | "bangles"
   | "chain"
   | "mangalsutra"
-  | "bracelet";
+  | "bracelet"
+  | "dholna"
+  | "tika"
+  | "nathiya";
 
 export interface Metal {
   slug: MetalSlug;
@@ -40,6 +43,7 @@ export interface Product {
   isNew: boolean;
   isBestseller: boolean;
   isPublished: boolean;
+  isBridal: boolean;
 }
 
 export const metals: Metal[] = [
@@ -57,7 +61,7 @@ export const metals: Metal[] = [
     tagline: "Light, perfectly held",
     description:
       "Certified natural diamonds set in 18K gold, cut and matched for brilliance that lasts a lifetime.",
-    purity: "IGI / GIA Certified",
+    purity: "IGI Certified",
   },
 ];
 
@@ -71,6 +75,14 @@ export const categories: Category[] = [
   { slug: "chain", name: "Chain", blurb: "Rope, box and Cuban links" },
   { slug: "mangalsutra", name: "Mangalsutra", blurb: "Sacred black beads, modern grace" },
   { slug: "bracelet", name: "Bracelet", blurb: "Tennis, charm and cuff bracelets" },
+  { slug: "dholna", name: "Dholna", blurb: "The traditional dholna, treasured by every bride" },
+  { slug: "tika", name: "Tika", blurb: "Maang tikka to crown the bridal look" },
+  { slug: "nathiya", name: "Nathiya", blurb: "Nose rings from delicate to grand bridal nath" },
+];
+
+/** Categories highlighted in the Bridal Edit, in display order. */
+export const bridalCategories: CategorySlug[] = [
+  "necklace", "tika", "nathiya", "jhumka", "mangalsutra", "bangles", "dholna",
 ];
 
 export const purities = ["24K", "22K", "18K", "14K"] as const;

@@ -16,7 +16,7 @@ The site runs at http://localhost:3000 and the admin panel at http://localhost:3
 
 ## Admin panel
 
-`/admin` opens a dashboard with Manage and Add pages for **Products**, **Offers** and **Testimonials** — each list has Edit, Delete and a Live/Hidden switch. Active offers and published testimonials appear on the home page automatically.
+`/admin` opens a dashboard with Manage and Add pages for **Products**, **Offers** and **Testimonials** — each list has Edit, Delete and a Live/Hidden switch. Active offers and published testimonials appear on the home page automatically. Tick **Bridal collection** on a product to include it on the `/bridal` page.
 
 ## Data (Supabase)
 
@@ -39,6 +39,10 @@ select id from auth.users where email = 'owner@example.com';
 ```
 
 3. Sign in at `/admin/login`.
+
+## Live MCX rates
+
+The home page shows live MCX gold (per 10 g) and silver (per kg) prices from [Metals.Dev](https://metals.dev). Add `METALS_DEV_API_KEY` to `.env.local` (and your hosting settings) to switch it on; without a key the rates band stays hidden. Prices refresh every `METALS_REFRESH_MINUTES` (default 30 — use 480 or more on the free 100-requests/month plan).
 
 ## Store details
 

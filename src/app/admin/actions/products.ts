@@ -23,6 +23,7 @@ const productSchema = z.object({
     .max(12, "Up to 12 photos per product"),
   isNew: z.boolean(),
   isBestseller: z.boolean(),
+  isBridal: z.boolean(),
   isPublished: z.boolean(),
   sortOrder: z.number().int().min(0).max(9999),
 });
@@ -62,6 +63,7 @@ export async function saveProduct(input: ProductInput): Promise<SaveResult> {
     images: p.images,
     is_new: p.isNew,
     is_bestseller: p.isBestseller,
+    is_bridal: p.isBridal,
     is_published: p.isPublished,
     sort_order: p.sortOrder,
   };
