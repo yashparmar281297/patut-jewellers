@@ -26,6 +26,7 @@ export default async function EditProductPage(props: PageProps<"/admin/products/
             purity: p.purity as ProductFormValues["purity"],
             weight: String(p.weight),
             diamondCarat: p.diamond_carat === null ? "" : String(p.diamond_carat),
+            makingChargePerGram: String(p.making_charge_per_gram ?? 0),
             description: p.description,
             images: p.images,
             isNew: p.is_new,

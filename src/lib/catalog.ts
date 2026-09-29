@@ -44,6 +44,8 @@ export interface Product {
   isBestseller: boolean;
   isPublished: boolean;
   isBridal: boolean;
+  /** Making charges in rupees per gram. */
+  makingChargePerGram: number;
 }
 
 export const metals: Metal[] = [

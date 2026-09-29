@@ -34,6 +34,7 @@ export type Database = {
           is_bridal: boolean;
           is_new: boolean;
           is_published: boolean;
+          making_charge_per_gram: number;
           metal: string;
           name: string;
           purity: string;
@@ -53,6 +54,7 @@ export type Database = {
           is_bridal?: boolean;
           is_new?: boolean;
           is_published?: boolean;
+          making_charge_per_gram?: number;
           metal: string;
           name: string;
           purity?: string;
@@ -72,6 +74,7 @@ export type Database = {
           is_bridal?: boolean;
           is_new?: boolean;
           is_published?: boolean;
+          making_charge_per_gram?: number;
           metal?: string;
           name?: string;
           purity?: string;
@@ -79,6 +82,33 @@ export type Database = {
           sort_order?: number;
           updated_at?: string;
           weight?: number;
+        };
+        Relationships: [];
+      };
+      gold_rate_settings: {
+        Row: {
+          id: number;
+          live_premium_per_10g: number;
+          mode: string;
+          rate_18k_per_10g: number | null;
+          rate_22k_per_10g: number | null;
+          updated_at: string;
+        };
+        Insert: {
+          id?: number;
+          live_premium_per_10g?: number;
+          mode?: string;
+          rate_18k_per_10g?: number | null;
+          rate_22k_per_10g?: number | null;
+          updated_at?: string;
+        };
+        Update: {
+          id?: number;
+          live_premium_per_10g?: number;
+          mode?: string;
+          rate_18k_per_10g?: number | null;
+          rate_22k_per_10g?: number | null;
+          updated_at?: string;
         };
         Relationships: [];
       };

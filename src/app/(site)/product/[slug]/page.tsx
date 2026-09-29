@@ -2,12 +2,14 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import JewelIcon from "@/components/JewelIcon";
+import GoldPriceCalculator from "@/components/GoldPriceCalculator";
 import ProductCard from "@/components/ProductCard";
 import ProductGallery from "@/components/ProductGallery";
 import TiltCard from "@/components/TiltCard";
 import WhatsAppIcon from "@/components/WhatsAppIcon";
 import { getCategory, getMetal } from "@/lib/catalog";
 import { getProduct, getProductSlugs, getProducts } from "@/lib/products";
+import { getGoldRates } from "@/lib/rates";
 import { productWhatsappLink, site } from "@/lib/site";
 
 export const revalidate = 300;
@@ -31,7 +33,11 @@ export default async function ProductPage(props: PageProps<"/product/[slug]">) {
   const metal = getMetal(product.metal)!;
   const category = getCategory(product.category)!;
   const isDiamond = product.metal === "diamond";
-  const related = (await getProducts(product.metal, product.category)).filter((p) => p.slug !== product.slug);
+  const [relatedAll, goldRates] = await Promise.all([
+    getProducts(product.metal, product.category),
+    isDiamond ? Promise.resolve(null) : getGoldRates(),
+  ]);
+  const related = relatedAll.filter((p) => p.slug !== product.slug);
 
   const specs = [
     ["Metal", isDiamond ? "18K Gold" : `${product.purity} Gold`],
@@ -92,6 +98,15 @@ export default async function ProductPage(props: PageProps<"/product/[slug]">) {
             ))}
           </dl>
 
+          {!isDiamond && (
+            <GoldPriceCalculator
+              weightGrams={product.weight}
+              makingPerGram={product.makingChargePerGram}
+              defaultKarat={product.purity === "18K" ? "18k" : "22k"}
+              initialRates={goldRates}
+            />
+          )}
+
           {site.whatsapp && (
             <a
               href={whatsappHref}
@@ -104,7 +119,9 @@ export default async function ProductPage(props: PageProps<"/product/[slug]">) {
             </a>
           )}
           <p className="mt-3 text-sm text-muted">
-            Chat with us for today&apos;s price, more photos or a video call.
+            {isDiamond
+              ? "Chat with us for today’s price, more photos or a video call."
+              : "Chat with us for more photos, a video call or to reserve this piece."}
           </p>
 
           <ul className="mt-8 grid grid-cols-2 gap-3 text-sm text-muted">

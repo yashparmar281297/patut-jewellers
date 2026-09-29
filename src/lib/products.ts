@@ -21,6 +21,7 @@ export function toProduct(row: ProductRow): Product {
     isBestseller: row.is_bestseller,
     isPublished: row.is_published,
     isBridal: row.is_bridal,
+    makingChargePerGram: Number(row.making_charge_per_gram) || 0,
   };
 }
 

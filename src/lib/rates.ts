@@ -1,5 +1,8 @@
 import "server-only";
 
+import { karats, type GoldRates } from "@/lib/pricing";
+import { publicClient } from "@/lib/supabase/public";
+
 export interface McxRates {
   /** MCX gold (999) in INR per 10 grams. */
   gold10g: number;
@@ -40,4 +43,59 @@ export async function getMcxRates(): Promise<McxRates | null> {
   } catch {
     return null;
   }
+}
+
+export interface RateSettings {
+  mode: "live" | "manual";
+  rate22kPer10g: number | null;
+  rate18kPer10g: number | null;
+  livePremiumPer10g: number;
+  updatedAt: string;
+}
+
+/** The store's gold rate settings from the admin panel (Admin → Gold Rates). */
+export async function getRateSettings(): Promise<RateSettings | null> {
+  const { data, error } = await publicClient.from("gold_rate_settings").select("*").eq("id", 1).maybeSingle();
+  if (error || !data) return null;
+  return {
+    mode: data.mode === "manual" ? "manual" : "live",
+    rate22kPer10g: data.rate_22k_per_10g === null ? null : Number(data.rate_22k_per_10g),
+    rate18kPer10g: data.rate_18k_per_10g === null ? null : Number(data.rate_18k_per_10g),
+    livePremiumPer10g: Number(data.live_premium_per_10g) || 0,
+    updatedAt: data.updated_at,
+  };
+}
+
+function manualRates(settings: RateSettings | null): GoldRates | null {
+  if (!settings?.rate22kPer10g || !settings.rate18kPer10g) return null;
+  return {
+    rate22kPerGram: settings.rate22kPer10g / 10,
+    rate18kPerGram: settings.rate18kPer10g / 10,
+    rate24kPerGram: null,
+    source: "manual",
+    updatedAt: settings.updatedAt,
+  };
+}
+
+/**
+ * Today's 22K and 18K rates for the Patna market.
+ * Live mode: MCX 24K (999) plus the store premium, scaled by purity (916 / 750).
+ * Manual mode — or live mode with no MCX feed — uses the rates entered in the admin.
+ */
+export async function getGoldRates(): Promise<GoldRates | null> {
+  const settings = await getRateSettings();
+  if (settings?.mode === "manual") return manualRates(settings);
+
+  const mcx = await getMcxRates();
+  if (mcx) {
+    const rate24 = (mcx.gold10g + (settings?.livePremiumPer10g ?? 0)) / 10;
+    return {
+      rate22kPerGram: rate24 * karats[0].purity,
+      rate18kPerGram: rate24 * karats[1].purity,
+      rate24kPerGram: rate24,
+      source: "live",
+      updatedAt: mcx.updatedAt,
+    };
+  }
+  return manualRates(settings);
 }

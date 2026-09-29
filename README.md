@@ -40,9 +40,14 @@ select id from auth.users where email = 'owner@example.com';
 
 3. Sign in at `/admin/login`.
 
-## Live MCX rates
+## Gold rates and live prices
 
-The home page shows live MCX gold (per 10 g) and silver (per kg) prices from [Metals.Dev](https://metals.dev). Add `METALS_DEV_API_KEY` to `.env.local` (and your hosting settings) to switch it on; without a key the rates band stays hidden. Prices refresh every `METALS_REFRESH_MINUTES` (default 30 — use 480 or more on the free 100-requests/month plan).
+- The home page shows a live clock (IST), MCX open/closed status (Mon–Fri 9:00 AM – 11:30 PM, 11:55 PM in winter; exchange holidays not included) and today's Patna 22K (916) and 18K (750) rates.
+- Gold product pages let customers pick 916 · 22 Karat or 750 · 18 Karat and show a live price: (rate per gram + the product's making charge per gram) × weight, plus 3% GST. The price re-checks `/api/rates` every minute.
+- **Admin → Gold Rates** chooses the source:
+  - **Live (MCX-linked)** — MCX 24K from [Metals.Dev](https://metals.dev) plus a Patna premium per 10 g; 22K = 24K × 0.916, 18K = 24K × 0.75. Needs `METALS_DEV_API_KEY`; refreshes every `METALS_REFRESH_MINUTES` (default 30; use 480+ on the free plan).
+  - **Manual** — today's Patna 22K and 18K rates per 10 g. These also act as the backup when the live feed is unavailable.
+- Set each product's making charges (₹ per gram) in the product form.
 
 ## Store details
 

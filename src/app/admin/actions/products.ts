@@ -16,6 +16,7 @@ const productSchema = z.object({
   category: z.enum(categories.map((c) => c.slug) as [string, ...string[]]),
   purity: z.enum(purities),
   weight: z.number({ error: "Enter the weight in grams" }).positive("Weight must be more than 0").max(10000),
+  makingChargePerGram: z.number({ error: "Enter making charges in rupees per gram" }).min(0, "Cannot be negative").max(100000),
   diamondCarat: z.number().positive("Carat must be more than 0").max(1000).nullable(),
   description: z.string().trim().max(2000),
   images: z
@@ -59,6 +60,7 @@ export async function saveProduct(input: ProductInput): Promise<SaveResult> {
     purity: p.purity,
     weight: p.weight,
     diamond_carat: p.diamondCarat,
+    making_charge_per_gram: p.makingChargePerGram,
     description: p.description,
     images: p.images,
     is_new: p.isNew,

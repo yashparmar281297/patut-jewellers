@@ -27,6 +27,7 @@ export default async function AdminDashboardPage() {
   ];
 
   const tiles = [
+    { section: "Pricing", title: "Gold Rates", text: "Set today’s Patna 22K and 18K rates, or follow the live MCX rate.", href: "/admin/rates" },
     { section: "Catalogue", title: "Manage Products", text: "View every product, edit details and photos, hide or delete.", href: "/admin/products" },
     { section: "Catalogue", title: "Add New Product", text: "Add a gold or diamond piece with up to 12 photos.", href: "/admin/products/new", primary: true },
     { section: "Offers", title: "Manage Offers", text: "Edit, switch off or delete the offers shown on the home page.", href: "/admin/offers" },

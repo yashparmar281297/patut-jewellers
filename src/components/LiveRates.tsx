@@ -1,6 +1,8 @@
-import { getMcxRates } from "@/lib/rates";
-
-const inr = new Intl.NumberFormat("en-IN", { style: "currency", currency: "INR", maximumFractionDigits: 0 });
+import MarketClock from "@/components/MarketClock";
+import WhatsAppIcon from "@/components/WhatsAppIcon";
+import { inr } from "@/lib/pricing";
+import { getGoldRates } from "@/lib/rates";
+import { generalWhatsappLink, site } from "@/lib/site";
 
 function formatUpdated(iso: string) {
   const date = new Date(iso);
@@ -9,65 +11,62 @@ function formatUpdated(iso: string) {
     timeZone: "Asia/Kolkata",
     day: "numeric",
     month: "short",
-    year: "numeric",
     hour: "numeric",
     minute: "2-digit",
     hour12: true,
   })} IST`;
 }
 
-// Drawn rather than an emoji: Windows does not render flag emoji.
-function IndiaFlag() {
-  return (
-    <svg viewBox="0 0 30 20" className="h-3 w-[18px] shrink-0 rounded-[2px] ring-1 ring-black/10" aria-hidden>
-      <rect width="30" height="20" fill="#fff" />
-      <rect width="30" height="6.67" fill="#ff9933" />
-      <rect y="13.33" width="30" height="6.67" fill="#138808" />
-      <circle cx="15" cy="10" r="2.6" fill="none" stroke="#000080" strokeWidth="0.6" />
-    </svg>
-  );
-}
-
-/** Today's MCX gold and silver prices; renders nothing until rates are available. */
+/** Live clock, MCX status and today's Patna gold rates. */
 export default async function LiveRates() {
-  const rates = await getMcxRates();
-  if (!rates) return null;
+  const rates = await getGoldRates();
 
-  const items = [
-    { label: "Gold 999", unit: "per 10 g", value: rates.gold10g, tone: "from-[#f3eadd] to-[#dbc6ab]" },
-    { label: "Silver 999", unit: "per 1 kg", value: rates.silver1kg, tone: "from-[#f6eff4] to-[#eadde6]" },
-  ];
+  const cards = rates
+    ? [
+        { title: "22K", hallmark: "916", value: rates.rate22kPerGram * 10, tone: "from-[#f3eadd] to-[#dbc6ab]" },
+        { title: "18K", hallmark: "750", value: rates.rate18kPerGram * 10, tone: "from-[#f3eadd] to-[#e7d5bc]" },
+        ...(rates.rate24kPerGram
+          ? [{ title: "24K", hallmark: "999", value: rates.rate24kPerGram * 10, tone: "from-[#f6eff4] to-[#eadde6]" }]
+          : []),
+      ]
+    : [];
 
   return (
-    <section aria-label="Live MCX rates" className="border-b border-gold/20 bg-paper">
-      <div className="mx-auto flex max-w-7xl flex-col gap-4 px-4 py-5 sm:px-6 md:flex-row md:items-center md:justify-between lg:px-10">
+    <section aria-label="Live gold rates" className="border-b border-gold/20 bg-paper">
+      <div className="mx-auto flex max-w-7xl flex-col gap-5 px-4 py-5 sm:px-6 lg:flex-row lg:items-center lg:justify-between lg:px-10">
         <div>
-          <p className="flex items-center gap-2 whitespace-nowrap font-caps text-[11px] tracking-[0.3em] text-ink">
-            <span className="relative flex h-2.5 w-2.5">
-              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-red-500 opacity-60" />
-              <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-red-500" />
-            </span>
-            Live MCX Rates
-          </p>
-          <p className="mt-1.5 flex items-center gap-1.5 text-xs text-muted">
-            <IndiaFlag />
-            India · Updated {formatUpdated(rates.updatedAt)}
+          <MarketClock />
+          <p className="mt-2 text-xs text-muted">
+            📌 Patna Gold Market rates
+            {rates ? ` · updated ${formatUpdated(rates.updatedAt)}` : ""}
           </p>
         </div>
-        <div className="grid grid-cols-2 gap-3 md:flex md:gap-4">
-          {items.map((item) => (
-            <div
-              key={item.label}
-              className={`rounded-2xl border border-gold/25 bg-gradient-to-br ${item.tone} px-4 py-3 md:min-w-56 md:px-5`}
+
+        {cards.length > 0 ? (
+          <div className={`grid gap-3 ${cards.length === 3 ? "grid-cols-3" : "grid-cols-2"} lg:flex lg:gap-4`}>
+            {cards.map((card) => (
+              <div key={card.hallmark} className={`rounded-2xl border border-gold/25 bg-gradient-to-br ${card.tone} px-3 py-3 sm:px-4 lg:min-w-48 lg:px-5`}>
+                <p className="font-caps text-[9px] tracking-[0.2em] text-ink/70 sm:text-[10px] sm:tracking-[0.25em]">
+                  {card.hallmark} · {card.title}
+                </p>
+                <p className="mt-1 font-display text-xl leading-none text-ink sm:text-3xl">{inr.format(card.value)}</p>
+                <p className="mt-1 text-[11px] text-muted">per 10 g</p>
+              </div>
+            ))}
+          </div>
+        ) : (
+          site.whatsapp && (
+            <a
+              href={generalWhatsappLink()}
+              target="_blank"
+              rel="noreferrer"
+              className="inline-flex items-center gap-2 self-start rounded-full border border-gold/40 px-4 py-2 text-sm text-gold-deep hover:bg-cream lg:self-auto"
             >
-              <p className="font-caps text-[10px] tracking-[0.25em] text-ink/70">
-                MCX {item.label}
-              </p>
-              <p className="mt-1 font-display text-2xl leading-none text-ink sm:text-3xl">{inr.format(item.value)}</p>
-              <p className="mt-1 text-[11px] text-muted">{item.unit}</p>
-            </div>
-          ))}
-        </div>
+              <WhatsAppIcon className="h-4 w-4 text-whatsapp" />
+              Ask today&apos;s gold rate on WhatsApp
+            </a>
+          )
+        )}
       </div>
     </section>
   );

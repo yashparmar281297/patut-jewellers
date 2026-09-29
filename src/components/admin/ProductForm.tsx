@@ -27,6 +27,7 @@ export interface ProductFormValues {
   purity: (typeof purities)[number];
   weight: string;
   diamondCarat: string;
+  makingChargePerGram: string;
   description: string;
   images: string[];
   isNew: boolean;
@@ -126,6 +127,7 @@ export default function ProductForm({ initial }: { initial: ProductFormValues })
       category: values.category,
       purity: values.purity,
       weight: toNumber(values.weight),
+      makingChargePerGram: values.makingChargePerGram.trim() === "" ? 0 : Number(values.makingChargePerGram),
       diamondCarat: values.metal === "diamond" && values.diamondCarat.trim() !== "" ? Number(values.diamondCarat) : null,
       description: values.description,
       images: photos.filter((p) => p.status === "done" && p.path).map((p) => p.path!),
@@ -357,6 +359,27 @@ export default function ProductForm({ initial }: { initial: ProductFormValues })
             />
           </Field>
         </div>
+
+        <Field
+          label="Making charges (₹ per gram)"
+          error={fieldErrors.makingChargePerGram}
+          hint={
+            values.metal === "gold"
+              ? "Website price = (gold rate + making charge) × weight + 3% GST"
+              : "Used for gold pieces; diamond prices are shared on WhatsApp"
+          }
+        >
+          <input
+            type="number"
+            inputMode="decimal"
+            step="1"
+            min="0"
+            value={values.makingChargePerGram}
+            onChange={(e) => set("makingChargePerGram", e.target.value)}
+            placeholder="e.g. 650"
+            className={`${inputClass} ${border("makingChargePerGram")}`}
+          />
+        </Field>
 
         {values.metal === "diamond" && (
           <Field label="Diamond weight (carat)" error={fieldErrors.diamondCarat} hint="Total carat weight of all diamonds">

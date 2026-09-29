@@ -16,6 +16,7 @@ export default function NewProductPage() {
             purity: "22K",
             weight: "",
             diamondCarat: "",
+            makingChargePerGram: "",
             description: "",
             images: [],
             isNew: true,
