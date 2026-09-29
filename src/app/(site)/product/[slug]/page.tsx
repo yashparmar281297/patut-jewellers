@@ -40,7 +40,7 @@ export default async function ProductPage(props: PageProps<"/product/[slug]">) {
   const related = relatedAll.filter((p) => p.slug !== product.slug);
 
   const specs = [
-    ["Metal", isDiamond ? "18K Gold" : `${product.purity} Gold`],
+    ["Metal", isDiamond ? `${product.purity} Gold` : `${product.goldPurities.join(" / ") || product.purity} Gold`],
     ["Gross weight", `${product.weight} g`],
     ...(product.diamondCarat ? [["Diamond weight", `${product.diamondCarat} ct`], ["Certification", "IGI"]] : []),
     ["Hallmark", "BIS HUID"],
@@ -101,8 +101,8 @@ export default async function ProductPage(props: PageProps<"/product/[slug]">) {
           {!isDiamond && (
             <GoldPriceCalculator
               weightGrams={product.weight}
-              makingPerGram={product.makingChargePerGram}
-              defaultKarat={product.purity === "18K" ? "18k" : "22k"}
+              makingPercent={product.makingChargePercent}
+              available={product.goldPurities}
               initialRates={goldRates}
             />
           )}

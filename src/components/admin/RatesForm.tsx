@@ -4,7 +4,7 @@ import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
 import { saveRateSettings } from "@/app/admin/actions/rates";
 import { borderFor, Field, inputClass } from "@/components/admin/fields";
-import { inr, karats } from "@/lib/pricing";
+import { inr, karats, priceBreakup } from "@/lib/pricing";
 
 interface Props {
   initial: {
@@ -185,10 +185,8 @@ export default function RatesForm({ initial, mcxGold10g }: Props) {
               ))}
             </dl>
             <p className="mt-4 text-sm text-muted">
-              Example: a 21 g piece in 22K with ₹500/g making charges shows{" "}
-              <strong className="text-ink">
-                {inr.format(Math.round(((preview.r22 / 10) * 21 + 500 * 21) * 1.03))}
-              </strong>{" "}
+              Example: a 21 g piece in 22K with 12% making charges shows{" "}
+              <strong className="text-ink">{inr.format(priceBreakup(preview.r22 / 10, 21, 12).total)}</strong>{" "}
               including 3% GST.
             </p>
           </>

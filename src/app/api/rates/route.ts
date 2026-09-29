@@ -7,6 +7,6 @@ export async function GET() {
   const rates = await getGoldRates();
   return Response.json(
     { rates },
-    { headers: { "Cache-Control": "public, s-maxage=60, stale-while-revalidate=120" } },
+    { headers: { "Cache-Control": "public, s-maxage=10, stale-while-revalidate=30" } },
   );
 }

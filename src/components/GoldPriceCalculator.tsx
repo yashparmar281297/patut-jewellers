@@ -1,51 +1,25 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { inr, karats, priceBreakup, ratePerGram, type GoldRates, type KaratKey } from "@/lib/pricing";
+import { useState } from "react";
+import { GOLD_GST_PERCENT, inr, karats, priceBreakup, ratePerGram, type GoldRates, type KaratKey } from "@/lib/pricing";
+import { useLiveRates } from "@/lib/useLiveRates";
 
 interface Props {
   weightGrams: number;
-  makingPerGram: number;
-  defaultKarat: KaratKey;
+  makingPercent: number;
+  /** Purities this piece is offered in; the first is selected initially. */
+  available: KaratKey[];
   initialRates: GoldRates | null;
 }
 
-const POLL_MS = 60_000;
-
-/** Live gold price for a product in 22K or 18K, following the Patna market rate. */
-export default function GoldPriceCalculator({ weightGrams, makingPerGram, defaultKarat, initialRates }: Props) {
-  const [karat, setKarat] = useState<KaratKey>(defaultKarat);
-  const [rates, setRates] = useState<GoldRates | null>(initialRates);
-  const [flash, setFlash] = useState(false);
+/** Live gold price for a product, following the Patna market rate. */
+export default function GoldPriceCalculator({ weightGrams, makingPercent, available, initialRates }: Props) {
+  const options = karats.filter((k) => available.includes(k.key));
+  const [karat, setKarat] = useState<KaratKey>(options[0]?.key ?? "22K");
   const [showBreakup, setShowBreakup] = useState(false);
+  const { rates, changed, secondsAgo } = useLiveRates(initialRates);
 
-  useEffect(() => {
-    let cancelled = false;
-    async function refresh() {
-      try {
-        const res = await fetch("/api/rates", { cache: "no-store" });
-        if (!res.ok) return;
-        const { rates: next } = (await res.json()) as { rates: GoldRates | null };
-        if (cancelled || !next) return;
-        setRates((prev) => {
-          if (prev && prev.rate22kPerGram !== next.rate22kPerGram) {
-            setFlash(true);
-            window.setTimeout(() => setFlash(false), 1500);
-          }
-          return next;
-        });
-      } catch {
-        // Keep showing the last known rate.
-      }
-    }
-    const id = window.setInterval(refresh, POLL_MS);
-    return () => {
-      cancelled = true;
-      window.clearInterval(id);
-    };
-  }, []);
-
-  if (!rates) {
+  if (!rates || options.length === 0) {
     return (
       <div className="mt-8 rounded-2xl border border-gold/25 bg-paper p-5 text-sm text-muted">
         Today&apos;s gold rate is being updated — connect with us on WhatsApp for the current price.
@@ -54,14 +28,16 @@ export default function GoldPriceCalculator({ weightGrams, makingPerGram, defaul
   }
 
   const rate = ratePerGram(rates, karat);
-  const price = priceBreakup(rate, weightGrams, makingPerGram);
-  const selected = karats.find((k) => k.key === karat)!;
+  const price = priceBreakup(rate, weightGrams, makingPercent);
+  const selected = options.find((k) => k.key === karat)!;
 
   return (
     <div className="mt-8 rounded-3xl border border-gold/25 bg-paper p-5 sm:p-6">
-      <p className="font-caps text-[10px] tracking-[0.3em] text-muted">Choose gold purity</p>
-      <div className="mt-3 grid grid-cols-2 gap-3" role="radiogroup" aria-label="Gold purity">
-        {karats.map((k) => {
+      <p className="font-caps text-[10px] tracking-[0.3em] text-muted">
+        {options.length > 1 ? "Choose gold purity" : "Gold purity"}
+      </p>
+      <div className={`mt-3 grid gap-3 ${options.length > 1 ? "grid-cols-2" : "grid-cols-1 sm:max-w-[50%]"}`} role="radiogroup" aria-label="Gold purity">
+        {options.map((k) => {
           const active = k.key === karat;
           return (
             <button
@@ -71,7 +47,9 @@ export default function GoldPriceCalculator({ weightGrams, makingPerGram, defaul
               aria-checked={active}
               onClick={() => setKarat(k.key)}
               className={`rounded-2xl border px-4 py-3 text-left transition-colors ${
-                active ? "border-gold bg-gold text-paper shadow-[0_12px_30px_-15px_rgba(123,83,33,0.9)]" : "border-gold/30 bg-ivory/50 text-ink hover:border-gold"
+                active
+                  ? "border-gold bg-gold text-paper shadow-[0_12px_30px_-15px_rgba(123,83,33,0.9)]"
+                  : "border-gold/30 bg-ivory/50 text-ink hover:border-gold"
               }`}
             >
               <span className="block font-display text-2xl leading-none">{k.hallmark}</span>
@@ -89,8 +67,8 @@ export default function GoldPriceCalculator({ weightGrams, makingPerGram, defaul
             {selected.hallmark} · {selected.label} · {weightGrams} g
           </p>
           <p
-            className={`mt-1 font-display text-4xl leading-none text-ink transition-colors duration-700 sm:text-5xl ${
-              flash ? "text-emerald-700" : ""
+            className={`mt-1 font-display text-4xl leading-none transition-colors duration-700 sm:text-5xl ${
+              changed ? "text-emerald-700" : "text-ink"
             }`}
             aria-live="polite"
           >
@@ -102,7 +80,9 @@ export default function GoldPriceCalculator({ weightGrams, makingPerGram, defaul
             <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-500 opacity-60" />
             <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-500" />
           </span>
-          {inr.format(rate)}/g {rates.source === "live" ? "live" : "today"}
+          <span className="tabular-nums">
+            {inr.format(rate)}/g · live · {secondsAgo}s ago
+          </span>
         </p>
       </div>
 
@@ -119,24 +99,22 @@ export default function GoldPriceCalculator({ weightGrams, makingPerGram, defaul
       </button>
       {showBreakup && (
         <dl className="mt-3 space-y-2 border-t border-gold/20 pt-3 text-sm">
-          <div className="flex justify-between">
+          <div className="flex justify-between gap-4">
             <dt className="text-muted">
               Gold value ({weightGrams} g × {inr.format(rate)}/g)
             </dt>
             <dd className="text-ink">{inr.format(price.goldValue)}</dd>
           </div>
-          <div className="flex justify-between">
-            <dt className="text-muted">
-              Making charges ({weightGrams} g × {inr.format(makingPerGram)}/g)
-            </dt>
+          <div className="flex justify-between gap-4">
+            <dt className="text-muted">Making charges ({makingPercent}%)</dt>
             <dd className="text-ink">{inr.format(price.makingCharges)}</dd>
           </div>
-          <div className="flex justify-between">
-            <dt className="text-muted">GST (3%)</dt>
+          <div className="flex justify-between gap-4">
+            <dt className="text-muted">GST ({GOLD_GST_PERCENT}%)</dt>
             <dd className="text-ink">{inr.format(price.gst)}</dd>
           </div>
-          <div className="flex justify-between border-t border-gold/20 pt-2 font-medium">
-            <dt className="text-ink">Total</dt>
+          <div className="flex justify-between gap-4 border-t border-gold/20 pt-2 font-medium">
+            <dt className="text-ink">Final price</dt>
             <dd className="text-ink">{inr.format(price.total)}</dd>
           </div>
         </dl>

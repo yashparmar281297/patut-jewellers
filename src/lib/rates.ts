@@ -14,7 +14,7 @@ export interface McxRates {
 
 // One cached request serves every visitor; 30 minutes stays within Metals.Dev's 2,000-request plan.
 // On the free plan (100 requests/month) set METALS_REFRESH_MINUTES to 480 or more.
-const refreshSeconds = Math.max(5, Number(process.env.METALS_REFRESH_MINUTES) || 30) * 60;
+const refreshSeconds = Math.round(Math.max(1, Number(process.env.METALS_REFRESH_MINUTES) || 30) * 60);
 
 /**
  * Live MCX (Multi Commodity Exchange of India) gold and silver prices from Metals.Dev.

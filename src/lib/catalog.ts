@@ -44,8 +44,10 @@ export interface Product {
   isBestseller: boolean;
   isPublished: boolean;
   isBridal: boolean;
-  /** Making charges in rupees per gram. */
-  makingChargePerGram: number;
+  /** Making charges as a percentage of the gold value. */
+  makingChargePercent: number;
+  /** Gold purities this piece is offered in (gold only). */
+  goldPurities: GoldPurity[];
 }
 
 export const metals: Metal[] = [
@@ -88,6 +90,10 @@ export const bridalCategories: CategorySlug[] = [
 ];
 
 export const purities = ["24K", "22K", "18K", "14K"] as const;
+
+/** Purities offered for gold pieces; customers pick one on the product page. */
+export const goldPurities = ["22K", "18K"] as const;
+export type GoldPurity = (typeof goldPurities)[number];
 
 export const PRODUCT_IMAGE_BUCKET = "product-images";
 

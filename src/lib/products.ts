@@ -3,7 +3,16 @@ import "server-only";
 import { cache } from "react";
 import type { ProductRow } from "@/lib/supabase/database.types";
 import { publicClient as supabase } from "@/lib/supabase/public";
-import { categories, mediaUrl, metals, type CategorySlug, type MetalSlug, type Product } from "@/lib/catalog";
+import {
+  categories,
+  goldPurities,
+  mediaUrl,
+  metals,
+  type CategorySlug,
+  type GoldPurity,
+  type MetalSlug,
+  type Product,
+} from "@/lib/catalog";
 
 export function toProduct(row: ProductRow): Product {
   return {
@@ -21,7 +30,8 @@ export function toProduct(row: ProductRow): Product {
     isBestseller: row.is_bestseller,
     isPublished: row.is_published,
     isBridal: row.is_bridal,
-    makingChargePerGram: Number(row.making_charge_per_gram) || 0,
+    makingChargePercent: Number(row.making_charge_percent) || 0,
+    goldPurities: row.gold_purities.filter((p): p is GoldPurity => (goldPurities as readonly string[]).includes(p)),
   };
 }
 
