@@ -50,6 +50,7 @@ export interface RateSettings {
   rate22kPer10g: number | null;
   rate18kPer10g: number | null;
   livePremiumPer10g: number;
+  diamondPerCarat: number | null;
   updatedAt: string;
 }
 
@@ -62,6 +63,7 @@ export async function getRateSettings(): Promise<RateSettings | null> {
     rate22kPer10g: data.rate_22k_per_10g === null ? null : Number(data.rate_22k_per_10g),
     rate18kPer10g: data.rate_18k_per_10g === null ? null : Number(data.rate_18k_per_10g),
     livePremiumPer10g: Number(data.live_premium_per_10g) || 0,
+    diamondPerCarat: data.diamond_rate_per_carat === null ? null : Number(data.diamond_rate_per_carat),
     updatedAt: data.updated_at,
   };
 }
@@ -72,6 +74,7 @@ function manualRates(settings: RateSettings | null): GoldRates | null {
     rate22kPerGram: settings.rate22kPer10g / 10,
     rate18kPerGram: settings.rate18kPer10g / 10,
     rate24kPerGram: null,
+    diamondPerCarat: settings.diamondPerCarat,
     source: "manual",
     updatedAt: settings.updatedAt,
   };
@@ -93,6 +96,7 @@ export async function getGoldRates(): Promise<GoldRates | null> {
       rate22kPerGram: rate24 * karats[0].purity,
       rate18kPerGram: rate24 * karats[1].purity,
       rate24kPerGram: rate24,
+      diamondPerCarat: settings?.diamondPerCarat ?? null,
       source: "live",
       updatedAt: mcx.updatedAt,
     };

@@ -60,7 +60,7 @@ export default function ProductCard({ product }: { product: Product }) {
               cover ? "rounded-full bg-ivory/85 px-2.5 py-1 text-ink" : "text-ink/60"
             }`}
           >
-            {product.metal === "gold" && product.goldPurities.length ? product.goldPurities.join(" · ") : product.purity}
+            {product.goldPurities.length ? product.goldPurities.join(" · ") : product.purity}
           </span>
         </div>
       </TiltCard>

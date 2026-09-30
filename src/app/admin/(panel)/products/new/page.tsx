@@ -20,7 +20,7 @@ export default async function NewProductPage() {
             weight: "",
             diamondCarat: "",
             makingChargePercent: "",
-            goldPurities: ["22K"],
+            goldPurities: ["22K", "18K"],
             description: "",
             images: [],
             isNew: true,

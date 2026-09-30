@@ -23,10 +23,13 @@ export default async function LiveRates() {
 
   const cards = rates
     ? [
-        { title: "22K", hallmark: "916", value: rates.rate22kPerGram * 10, tone: "from-[#f3eadd] to-[#dbc6ab]" },
-        { title: "18K", hallmark: "750", value: rates.rate18kPerGram * 10, tone: "from-[#f3eadd] to-[#e7d5bc]" },
+        { label: "916 · 22K", unit: "per 10 g", value: rates.rate22kPerGram * 10, tone: "from-[#f3eadd] to-[#dbc6ab]" },
+        { label: "750 · 18K", unit: "per 10 g", value: rates.rate18kPerGram * 10, tone: "from-[#f3eadd] to-[#e7d5bc]" },
         ...(rates.rate24kPerGram
-          ? [{ title: "24K", hallmark: "999", value: rates.rate24kPerGram * 10, tone: "from-[#f6eff4] to-[#eadde6]" }]
+          ? [{ label: "999 · 24K", unit: "per 10 g", value: rates.rate24kPerGram * 10, tone: "from-[#f3eadd] to-[#dbc6ab]" }]
+          : []),
+        ...(rates.diamondPerCarat
+          ? [{ label: "Diamond", unit: "per carat", value: rates.diamondPerCarat, tone: "from-[#f6eff4] to-[#eadde6]" }]
           : []),
       ]
     : [];
@@ -37,7 +40,7 @@ export default async function LiveRates() {
         <div>
           <MarketClock />
           <p className="mt-2 text-xs text-muted">
-            📌 Patna Gold Market rates
+            📌 Patna Gold Market · today&apos;s price
             {rates ? ` · updated ${formatUpdated(rates.updatedAt)}` : ""}
           </p>
         </div>
@@ -45,12 +48,12 @@ export default async function LiveRates() {
         {cards.length > 0 ? (
           <div className={`grid gap-3 ${cards.length === 3 ? "grid-cols-3" : "grid-cols-2"} lg:flex lg:gap-4`}>
             {cards.map((card) => (
-              <div key={card.hallmark} className={`rounded-2xl border border-gold/25 bg-gradient-to-br ${card.tone} px-3 py-3 sm:px-4 lg:min-w-48 lg:px-5`}>
+              <div key={card.label} className={`rounded-2xl border border-gold/25 bg-gradient-to-br ${card.tone} px-3 py-3 sm:px-4 lg:min-w-44 lg:px-5`}>
                 <p className="font-caps text-[9px] tracking-[0.2em] text-ink/70 sm:text-[10px] sm:tracking-[0.25em]">
-                  {card.hallmark} · {card.title}
+                  {card.label}
                 </p>
                 <p className="mt-1 font-display text-xl leading-none text-ink sm:text-3xl">{inr.format(card.value)}</p>
-                <p className="mt-1 text-[11px] text-muted">per 10 g</p>
+                <p className="mt-1 text-[11px] text-muted">{card.unit}</p>
               </div>
             ))}
           </div>

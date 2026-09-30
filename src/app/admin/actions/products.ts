@@ -31,7 +31,7 @@ const productSchema = z.object({
   isBridal: z.boolean(),
   isPublished: z.boolean(),
   sortOrder: z.number().int().min(0).max(9999),
-}).refine((p) => p.metal !== "gold" || p.goldPurities.length > 0, {
+}).refine((p) => p.goldPurities.length > 0, {
   message: "Choose 22K, 18K or both",
   path: ["goldPurities"],
 });
@@ -64,9 +64,9 @@ export async function saveProduct(input: ProductInput): Promise<SaveResult> {
     slug: p.slug,
     metal: p.metal,
     category: p.category,
-    // For gold, the first offered purity doubles as the main purity shown in listings.
-    purity: p.metal === "gold" ? p.goldPurities[0] : p.purity,
-    gold_purities: p.metal === "gold" ? Array.from(new Set(p.goldPurities)) : [],
+    // The first offered purity doubles as the main purity shown in listings.
+    purity: p.goldPurities[0],
+    gold_purities: Array.from(new Set(p.goldPurities)),
     weight: p.weight,
     diamond_carat: p.diamondCarat,
     making_charge_percent: p.makingChargePercent,

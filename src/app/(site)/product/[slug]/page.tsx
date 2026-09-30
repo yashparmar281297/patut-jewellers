@@ -35,12 +35,11 @@ export default async function ProductPage(props: PageProps<"/product/[slug]">) {
   const isDiamond = product.metal === "diamond";
   const [relatedAll, goldRates] = await Promise.all([
     getProducts(product.metal, product.category),
-    isDiamond ? Promise.resolve(null) : getGoldRates(),
+    getGoldRates(),
   ]);
   const related = relatedAll.filter((p) => p.slug !== product.slug);
 
   const specs = [
-    ["Metal", isDiamond ? `${product.purity} Gold` : `${product.goldPurities.join(" / ") || product.purity} Gold`],
     ["Gross weight", `${product.weight} g`],
     ...(product.diamondCarat ? [["Diamond weight", `${product.diamondCarat} ct`], ["Certification", "IGI"]] : []),
     ["Hallmark", "BIS HUID"],
@@ -98,14 +97,13 @@ export default async function ProductPage(props: PageProps<"/product/[slug]">) {
             ))}
           </dl>
 
-          {!isDiamond && (
-            <GoldPriceCalculator
-              weightGrams={product.weight}
-              makingPercent={product.makingChargePercent}
-              available={product.goldPurities}
-              initialRates={goldRates}
-            />
-          )}
+          <GoldPriceCalculator
+            weightGrams={product.weight}
+            makingPercent={product.makingChargePercent}
+            available={product.goldPurities}
+            diamondCarat={product.diamondCarat}
+            initialRates={goldRates}
+          />
 
           {site.whatsapp && (
             <a
@@ -119,9 +117,7 @@ export default async function ProductPage(props: PageProps<"/product/[slug]">) {
             </a>
           )}
           <p className="mt-3 text-sm text-muted">
-            {isDiamond
-              ? "Chat with us for today’s price, more photos or a video call."
-              : "Chat with us for more photos, a video call or to reserve this piece."}
+            Chat with us for more photos, a video call or to reserve this piece.
           </p>
 
           <ul className="mt-8 grid grid-cols-2 gap-3 text-sm text-muted">

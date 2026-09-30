@@ -9,25 +9,24 @@ export default async function AdminRatesPage() {
     supabase.from("gold_rate_settings").select("*").eq("id", 1).maybeSingle(),
     getMcxRates(),
   ]);
-
-  const updated = settings?.updated_at
-    ? new Date(settings.updated_at).toLocaleString("en-IN", { timeZone: "Asia/Kolkata", dateStyle: "medium", timeStyle: "short" })
-    : null;
+  const str = (v: number | null | undefined) => (v ? String(v) : "");
 
   return (
     <div>
       <PageHeader
-        section="Gold Rates"
-        title="Gold Rates"
-        subtitle={`Patna Gold Market rates used for website prices${updated ? ` · last saved ${updated} IST` : ""}`}
+        section="Pricing"
+        title="Current Day Price"
+        subtitle="Set today's gold and diamond rates — every product price on the website is calculated from these."
         back={{ href: "/admin", label: "Back to Dashboard" }}
       />
       <RatesForm
         mcxGold10g={mcx ? mcx.gold10g : null}
+        lastSaved={settings?.rate_22k_per_10g ? settings.updated_at : null}
         initial={{
-          mode: settings?.mode === "manual" ? "manual" : "live",
-          rate22kPer10g: settings?.rate_22k_per_10g ? String(settings.rate_22k_per_10g) : "",
-          rate18kPer10g: settings?.rate_18k_per_10g ? String(settings.rate_18k_per_10g) : "",
+          mode: settings?.mode === "live" ? "live" : "manual",
+          rate22kPer10g: str(settings?.rate_22k_per_10g),
+          rate18kPer10g: str(settings?.rate_18k_per_10g),
+          diamondRatePerCarat: str(settings?.diamond_rate_per_carat),
           livePremiumPer10g: String(settings?.live_premium_per_10g ?? 0),
         }}
       />
