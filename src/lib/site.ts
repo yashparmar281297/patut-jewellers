@@ -35,8 +35,8 @@ export function generalWhatsappLink() {
   return whatsappLink(GENERAL_WHATSAPP_MESSAGE);
 }
 
-/** WhatsApp link for a specific product; adds the product page link once the site URL is set. */
-export function productWhatsappLink(productName: string, productSlug: string) {
+/** WhatsApp link for a specific product: the product page link first, then the greeting. */
+export function productWhatsappLink(productName: string, productUrl: string) {
   const message = `Namaste 🙏, I would like to know more about ${productName} at Patut Jewellers.`;
-  return whatsappLink(site.url ? `${message}\n${site.url}/product/${productSlug}` : message);
+  return whatsappLink(productUrl ? `${productUrl}\n\n${message}` : message);
 }

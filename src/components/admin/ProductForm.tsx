@@ -94,7 +94,7 @@ function LivePricePreview({
                 <p className="text-xs text-muted">
                   {k.hallmark} · {k.key}
                 </p>
-                <p className="font-display text-xl text-ink">
+                <p className="font-sans font-semibold tabular-nums tracking-tight text-lg text-ink">
                   {inr.format(ratePerGram(rates, k.key))}
                   <span className="text-xs text-muted"> /g</span>
                 </p>
@@ -103,7 +103,7 @@ function LivePricePreview({
             {hasDiamonds && (
               <div className="col-span-2 rounded-xl bg-paper px-3 py-2">
                 <p className="text-xs text-muted">Diamond</p>
-                <p className="font-display text-xl text-ink">
+                <p className="font-sans font-semibold tabular-nums tracking-tight text-lg text-ink">
                   {diamondRate ? inr.format(diamondRate) : "Not set"}
                   <span className="text-xs text-muted"> /carat</span>
                 </p>
@@ -134,7 +134,7 @@ function LivePricePreview({
                     <span className="text-sm text-ink">
                       {k.hallmark} · {k.label}
                     </span>
-                    <span className="font-display text-2xl text-ink">{inr.format(p.total)}</span>
+                    <span className="font-sans font-semibold tabular-nums tracking-tight text-xl text-ink">{inr.format(p.total)}</span>
                   </div>
                   <p className="mt-0.5 text-xs text-muted">
                     {weight} g × {inr.format(rate)} = {inr.format(p.goldValue)} + making {makingPercent}% (
@@ -481,7 +481,7 @@ export default function ProductForm({
                     {on && "✓"}
                   </span>
                   <span>
-                    <span className="block font-display text-xl leading-none">{k.key}</span>
+                    <span className="block font-sans font-semibold tabular-nums tracking-tight text-lg leading-none">{k.key}</span>
                     <span className={`text-xs ${on ? "text-paper/80" : "text-muted"}`}>{k.hallmark} hallmark</span>
                   </span>
                 </button>

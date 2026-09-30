@@ -182,7 +182,7 @@ export default function RatesForm({ initial, lastSaved, mcxGold10g }: Props) {
                   <dt className="text-muted">
                     Example · 21 g in {k.hallmark} · {k.label}, 12% making
                   </dt>
-                  <dd className="mt-1 font-display text-2xl text-ink">{inr.format(priceBreakup(rate, 21, 12).total)}</dd>
+                  <dd className="mt-1 font-sans font-semibold tabular-nums tracking-tight text-xl text-ink">{inr.format(priceBreakup(rate, 21, 12).total)}</dd>
                 </div>
               );
             })}

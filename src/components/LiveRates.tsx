@@ -4,19 +4,6 @@ import { inr } from "@/lib/pricing";
 import { getGoldRates } from "@/lib/rates";
 import { generalWhatsappLink, site } from "@/lib/site";
 
-function formatUpdated(iso: string) {
-  const date = new Date(iso);
-  if (Number.isNaN(date.getTime())) return "";
-  return `${date.toLocaleString("en-IN", {
-    timeZone: "Asia/Kolkata",
-    day: "numeric",
-    month: "short",
-    hour: "numeric",
-    minute: "2-digit",
-    hour12: true,
-  })} IST`;
-}
-
 /** Live clock, MCX status and today's Patna gold rates. */
 export default async function LiveRates() {
   const rates = await getGoldRates();
@@ -39,10 +26,6 @@ export default async function LiveRates() {
       <div className="mx-auto flex max-w-7xl flex-col gap-5 px-4 py-5 sm:px-6 lg:flex-row lg:items-center lg:justify-between lg:px-10">
         <div>
           <MarketClock />
-          <p className="mt-2 text-xs text-muted">
-            📌 Patna Gold Market · today&apos;s price
-            {rates ? ` · updated ${formatUpdated(rates.updatedAt)}` : ""}
-          </p>
         </div>
 
         {cards.length > 0 ? (
@@ -52,7 +35,7 @@ export default async function LiveRates() {
                 <p className="font-caps text-[9px] tracking-[0.2em] text-ink/70 sm:text-[10px] sm:tracking-[0.25em]">
                   {card.label}
                 </p>
-                <p className="mt-1 font-display text-xl leading-none text-ink sm:text-3xl">{inr.format(card.value)}</p>
+                <p className="mt-1.5 font-sans font-semibold tabular-nums tracking-tight text-lg leading-none text-ink sm:text-2xl">{inr.format(card.value)}</p>
                 <p className="mt-1 text-[11px] text-muted">{card.unit}</p>
               </div>
             ))}

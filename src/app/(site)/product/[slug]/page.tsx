@@ -5,12 +5,12 @@ import JewelIcon from "@/components/JewelIcon";
 import GoldPriceCalculator from "@/components/GoldPriceCalculator";
 import ProductCard from "@/components/ProductCard";
 import ProductGallery from "@/components/ProductGallery";
+import ProductWhatsAppButton from "@/components/ProductWhatsAppButton";
 import TiltCard from "@/components/TiltCard";
-import WhatsAppIcon from "@/components/WhatsAppIcon";
 import { getCategory, getMetal } from "@/lib/catalog";
 import { getProduct, getProductSlugs, getProducts } from "@/lib/products";
 import { getGoldRates } from "@/lib/rates";
-import { productWhatsappLink, site } from "@/lib/site";
+import { site } from "@/lib/site";
 
 export const revalidate = 300;
 
@@ -45,8 +45,6 @@ export default async function ProductPage(props: PageProps<"/product/[slug]">) {
     ["Hallmark", "BIS HUID"],
     ["Category", category.name],
   ];
-
-  const whatsappHref = productWhatsappLink(product.name, product.slug);
 
   return (
     <>
@@ -106,15 +104,7 @@ export default async function ProductPage(props: PageProps<"/product/[slug]">) {
           />
 
           {site.whatsapp && (
-            <a
-              href={whatsappHref}
-              target="_blank"
-              rel="noreferrer"
-              className="mt-8 inline-flex w-full items-center justify-center gap-3 rounded-full bg-whatsapp px-8 py-4 text-base font-medium text-white shadow-[0_14px_35px_-12px_rgba(37,211,102,0.85)] transition-transform hover:-translate-y-0.5 sm:w-auto sm:self-start"
-            >
-              <WhatsAppIcon className="h-6 w-6" />
-              Connect on WhatsApp
-            </a>
+            <ProductWhatsAppButton name={product.name} slug={product.slug} />
           )}
           <p className="mt-3 text-sm text-muted">
             Chat with us for more photos, a video call or to reserve this piece.

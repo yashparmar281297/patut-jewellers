@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { GOLD_GST_PERCENT, inr, karats, priceBreakup, ratePerGram, type GoldRates, type KaratKey } from "@/lib/pricing";
+import { inr, karats, priceBreakup, ratePerGram, type GoldRates, type KaratKey } from "@/lib/pricing";
 import { useLiveRates } from "@/lib/useLiveRates";
 
 interface Props {
@@ -25,7 +25,6 @@ function rateDate(iso: string) {
 export default function GoldPriceCalculator({ weightGrams, makingPercent, available, diamondCarat, initialRates }: Props) {
   const options = karats.filter((k) => available.includes(k.key));
   const [karat, setKarat] = useState<KaratKey>(options[0]?.key ?? "22K");
-  const [showBreakup, setShowBreakup] = useState(false);
   const { rates, changed } = useLiveRates(initialRates);
 
   if (options.length === 0) return null;
@@ -58,7 +57,7 @@ export default function GoldPriceCalculator({ weightGrams, makingPercent, availa
                   : "border-gold/30 bg-ivory/50 text-ink hover:border-gold"
               }`}
             >
-              <span className="block font-display text-2xl leading-none">{k.hallmark}</span>
+              <span className="block font-sans font-semibold tabular-nums tracking-tight text-2xl leading-none">{k.hallmark}</span>
               <span className={`mt-1 block font-caps text-[10px] tracking-[0.2em] ${active ? "text-paper/80" : "text-muted"}`}>
                 {k.label}
               </span>
@@ -76,7 +75,7 @@ export default function GoldPriceCalculator({ weightGrams, makingPercent, availa
                 {needsDiamondRate ? ` · ${diamondCarat} ct diamonds` : ""}
               </p>
               <p
-                className={`mt-1 font-display text-4xl leading-none transition-colors duration-700 sm:text-5xl ${
+                className={`mt-1.5 font-sans font-semibold tabular-nums tracking-tight text-3xl leading-none transition-colors duration-700 sm:text-4xl ${
                   changed ? "text-emerald-700" : "text-ink"
                 }`}
                 aria-live="polite"
@@ -91,45 +90,6 @@ export default function GoldPriceCalculator({ weightGrams, makingPercent, availa
 
           <p className="mt-3 text-sm text-ink/80">Inclusive of making charges &amp; GST · Final billing at store</p>
           <p className="mt-1 text-sm text-muted">📌 Patna Gold Market · {new Date().getFullYear()}</p>
-
-          <button
-            type="button"
-            onClick={() => setShowBreakup((v) => !v)}
-            className="mt-4 text-sm text-gold-deep underline underline-offset-4"
-            aria-expanded={showBreakup}
-          >
-            {showBreakup ? "Hide price breakup" : "View price breakup"}
-          </button>
-          {showBreakup && (
-            <dl className="mt-3 space-y-2 border-t border-gold/20 pt-3 text-sm">
-              <div className="flex justify-between gap-4">
-                <dt className="text-muted">
-                  Gold value ({weightGrams} g × {inr.format(rate)}/g)
-                </dt>
-                <dd className="text-ink">{inr.format(price.goldValue)}</dd>
-              </div>
-              <div className="flex justify-between gap-4">
-                <dt className="text-muted">Making charges ({makingPercent}%)</dt>
-                <dd className="text-ink">{inr.format(price.makingCharges)}</dd>
-              </div>
-              {needsDiamondRate && (
-                <div className="flex justify-between gap-4">
-                  <dt className="text-muted">
-                    Diamonds ({diamondCarat} ct × {inr.format(diamondRate!)}/ct)
-                  </dt>
-                  <dd className="text-ink">{inr.format(price.diamondValue)}</dd>
-                </div>
-              )}
-              <div className="flex justify-between gap-4">
-                <dt className="text-muted">GST ({GOLD_GST_PERCENT}%)</dt>
-                <dd className="text-ink">{inr.format(price.gst)}</dd>
-              </div>
-              <div className="flex justify-between gap-4 border-t border-gold/20 pt-2 font-medium">
-                <dt className="text-ink">Final price</dt>
-                <dd className="text-ink">{inr.format(price.total)}</dd>
-              </div>
-            </dl>
-          )}
         </>
       ) : (
         <p className="mt-5 rounded-2xl bg-ivory/60 px-4 py-3 text-sm text-muted">
