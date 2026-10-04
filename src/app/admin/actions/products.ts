@@ -114,8 +114,9 @@ function saveError(error: { code?: string; message: string }): SaveResult {
   if (error.code === "23505") {
     return {
       ok: false,
-      error: "Another product already uses this web address.",
-      fieldErrors: { slug: "Already in use — choose a different one" },
+      error:
+        "A product with this web address already exists (usually the same name). Change the product name or web address, or edit the existing product from Products.",
+      fieldErrors: { slug: "Already used by another product — change it, e.g. add -2 at the end" },
     };
   }
   return { ok: false, error: error.message };

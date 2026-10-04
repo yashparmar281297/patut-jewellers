@@ -9,7 +9,8 @@ const nextConfig: NextConfig = {
   experimental: {
     serverActions: {
       // Admin forms must also work when the site is shared through a VS Code dev tunnel.
-      allowedOrigins: ["*.devtunnels.ms"],
+      // The tunnel forwards the public host but rewrites Origin to the local address.
+      allowedOrigins: ["*.devtunnels.ms", "localhost:3000", "localhost:3001", "localhost:3002"],
     },
   },
 };
