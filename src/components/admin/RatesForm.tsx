@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
 import { saveRateSettings } from "@/app/admin/actions/rates";
 import { borderFor, Field, inputClass } from "@/components/admin/fields";
+import { formatIstDate } from "@/lib/format";
 import { inr, karats, priceBreakup } from "@/lib/pricing";
 
 interface Props {
@@ -21,7 +22,7 @@ interface Props {
 }
 
 function istDay(date: Date) {
-  return date.toLocaleDateString("en-IN", { timeZone: "Asia/Kolkata", day: "numeric", month: "long", year: "numeric" });
+  return formatIstDate(date, "long");
 }
 
 export default function RatesForm({ initial, lastSaved, mcxGold10g }: Props) {

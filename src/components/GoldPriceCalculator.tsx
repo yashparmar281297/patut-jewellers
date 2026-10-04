@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { inr, karats, priceBreakup, ratePerGram, type GoldRates, type KaratKey } from "@/lib/pricing";
+import { formatIstDate } from "@/lib/format";
 import { useLiveRates } from "@/lib/useLiveRates";
 
 interface Props {
@@ -15,10 +16,7 @@ interface Props {
 }
 
 function rateDate(iso: string) {
-  const date = new Date(iso);
-  return Number.isNaN(date.getTime())
-    ? ""
-    : date.toLocaleDateString("en-IN", { timeZone: "Asia/Kolkata", day: "numeric", month: "short", year: "numeric" });
+  return formatIstDate(iso);
 }
 
 /** Karat buttons and the price for the chosen purity, from the rates set for the day. */

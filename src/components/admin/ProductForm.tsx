@@ -17,6 +17,7 @@ import {
 } from "@/lib/catalog";
 import { GOLD_GST_PERCENT, inr, karats, priceBreakup, ratePerGram, type GoldRates } from "@/lib/pricing";
 import { useLiveRates } from "@/lib/useLiveRates";
+import { formatIstDate } from "@/lib/format";
 import { uploadImage } from "@/lib/upload";
 
 const MAX_PHOTOS = 12;
@@ -67,12 +68,7 @@ function LivePricePreview({
   const hasDiamonds = diamondCarat > 0;
   const diamondRate = rates?.diamondPerCarat ?? null;
   const setOn = rates
-    ? new Date(rates.updatedAt).toLocaleDateString("en-IN", {
-        timeZone: "Asia/Kolkata",
-        day: "numeric",
-        month: "short",
-        year: "numeric",
-      })
+    ? formatIstDate(rates.updatedAt)
     : "";
 
   return (

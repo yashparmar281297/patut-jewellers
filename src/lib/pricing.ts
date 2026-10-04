@@ -1,3 +1,5 @@
+import { formatInr } from "@/lib/format";
+
 // Gold price calculation shared by the server (rates), the product page and the admin form.
 
 export const GOLD_GST_PERCENT = 3;
@@ -53,4 +55,5 @@ export function priceBreakup(
   return { goldValue, makingCharges, diamondValue, gst, total: goldValue + makingCharges + diamondValue + gst };
 }
 
-export const inr = new Intl.NumberFormat("en-IN", { style: "currency", currency: "INR", maximumFractionDigits: 0 });
+/** Rupee formatter that renders identically on the server and in every browser. */
+export const inr = { format: formatInr };
