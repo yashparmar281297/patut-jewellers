@@ -34,9 +34,9 @@ export default function StatusToggle({ id, value, action, onLabel = "Live", offL
       title={optimistic ? "Visible on the website" : "Hidden from the website"}
       className="flex shrink-0 items-center gap-2 text-xs text-muted"
     >
-      <span className={`relative h-6 w-11 rounded-full transition-colors ${optimistic ? "bg-gold" : "bg-sand"}`}>
+      <span className={`relative h-6 w-11 shrink-0 rounded-full transition-colors ${optimistic ? "bg-gold" : "bg-sand"}`}>
         <span
-          className={`absolute top-0.5 h-5 w-5 rounded-full bg-paper shadow transition-transform ${
+          className={`absolute left-0 top-0.5 h-5 w-5 rounded-full bg-paper shadow transition-transform ${
             optimistic ? "translate-x-5.5" : "translate-x-0.5"
           }`}
         />

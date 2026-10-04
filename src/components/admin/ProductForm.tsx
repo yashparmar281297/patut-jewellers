@@ -551,7 +551,7 @@ export default function ProductForm({
         <Field
           label="Web address"
           error={fieldErrors.slug}
-          hint={`/product/${values.slug || "…"}`}
+          hint={`/product/${values.slug || "…"} · if another product already uses it, -1, -2 … is added automatically`}
         >
           <input
             value={values.slug}

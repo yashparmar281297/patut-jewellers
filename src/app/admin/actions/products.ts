@@ -40,6 +40,25 @@ export type ProductInput = z.input<typeof productSchema>;
 
 export type SaveResult = ActionResult;
 
+type AdminClient = Awaited<ReturnType<typeof requireAdmin>>["supabase"];
+
+/**
+ * The web address to save: the requested one if it is free, otherwise the same address
+ * with the next free number added (gold-chokar-set → gold-chokar-set-1, -2, …).
+ */
+async function uniqueSlug(supabase: AdminClient, base: string, excludeId?: string) {
+  let query = supabase.from("products").select("slug").or(`slug.eq.${base},slug.like.${base}-%`);
+  if (excludeId) query = query.neq("id", excludeId);
+  const { data, error } = await query;
+  if (error) throw new Error(error.message);
+
+  const taken = new Set(data.map((row) => row.slug));
+  if (!taken.has(base)) return base;
+  let n = 1;
+  while (taken.has(`${base}-${n}`)) n++;
+  return `${base}-${n}`;
+}
+
 function refreshStorefront() {
   // Every storefront page lists products, so refresh them all.
   revalidatePath("/", "layout");
@@ -59,9 +78,15 @@ export async function saveProduct(input: ProductInput): Promise<SaveResult> {
   }
 
   const p = parsed.data;
+  let slug: string;
+  try {
+    slug = await uniqueSlug(supabase, p.slug, p.id);
+  } catch (error) {
+    return { ok: false, error: (error as Error).message };
+  }
   const row = {
     name: p.name,
-    slug: p.slug,
+    slug,
     metal: p.metal,
     category: p.category,
     // The first offered purity doubles as the main purity shown in listings.
