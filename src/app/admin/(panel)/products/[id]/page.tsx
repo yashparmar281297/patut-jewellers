@@ -34,6 +34,7 @@ export default async function EditProductPage(props: PageProps<"/admin/products/
             diamondCarat: p.diamond_carat === null ? "" : String(p.diamond_carat),
             makingChargePercent: String(p.making_charge_percent ?? 0),
             goldPurities: p.gold_purities.filter((x): x is GoldPurity => x === "22K" || x === "18K"),
+            price: p.price === null ? "" : String(p.price),
             description: p.description,
             images: p.images,
             isNew: p.is_new,

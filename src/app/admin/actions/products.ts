@@ -21,6 +21,7 @@ const productSchema = z.object({
     .number({ error: "Enter making charges as a percentage" })
     .min(0, "Cannot be negative")
     .max(100, "Cannot be more than 100%"),
+  price: z.number({ error: "Enter the price" }).positive("Price must be more than 0").max(1_000_000_000).nullable(),
   diamondCarat: z.number().positive("Carat must be more than 0").max(1000).nullable(),
   description: z.string().trim().max(2000),
   images: z
@@ -31,10 +32,15 @@ const productSchema = z.object({
   isBridal: z.boolean(),
   isPublished: z.boolean(),
   sortOrder: z.number().int().min(0).max(9999),
-}).refine((p) => p.goldPurities.length > 0, {
-  message: "Choose 22K, 18K or both",
-  path: ["goldPurities"],
-});
+})
+  .refine((p) => p.metal !== "gold" || p.goldPurities.length > 0, {
+    message: "Choose 22K, 18K or both",
+    path: ["goldPurities"],
+  })
+  .refine((p) => p.metal !== "diamond" || p.price !== null, {
+    message: "Enter the price for this diamond piece",
+    path: ["price"],
+  });
 
 export type ProductInput = z.input<typeof productSchema>;
 
@@ -89,9 +95,10 @@ export async function saveProduct(input: ProductInput): Promise<SaveResult> {
     slug,
     metal: p.metal,
     category: p.category,
-    // The first offered purity doubles as the main purity shown in listings.
-    purity: p.goldPurities[0],
-    gold_purities: Array.from(new Set(p.goldPurities)),
+    // For gold, the first offered purity doubles as the main purity shown in listings.
+    purity: p.metal === "gold" ? p.goldPurities[0] : p.purity,
+    gold_purities: p.metal === "gold" ? Array.from(new Set(p.goldPurities)) : [],
+    price: p.metal === "diamond" ? p.price : null,
     weight: p.weight,
     diamond_carat: p.diamondCarat,
     making_charge_percent: p.makingChargePercent,

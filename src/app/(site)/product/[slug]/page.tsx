@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import JewelIcon from "@/components/JewelIcon";
+import DiamondPrice from "@/components/DiamondPrice";
 import GoldPriceCalculator from "@/components/GoldPriceCalculator";
 import ProductCard from "@/components/ProductCard";
 import ProductGallery from "@/components/ProductGallery";
@@ -35,7 +36,7 @@ export default async function ProductPage(props: PageProps<"/product/[slug]">) {
   const isDiamond = product.metal === "diamond";
   const [relatedAll, goldRates] = await Promise.all([
     getProducts(product.metal, product.category),
-    getGoldRates(),
+    isDiamond ? Promise.resolve(null) : getGoldRates(),
   ]);
   const related = relatedAll.filter((p) => p.slug !== product.slug);
 
@@ -95,13 +96,16 @@ export default async function ProductPage(props: PageProps<"/product/[slug]">) {
             ))}
           </dl>
 
-          <GoldPriceCalculator
-            weightGrams={product.weight}
-            makingPercent={product.makingChargePercent}
-            available={product.goldPurities}
-            diamondCarat={product.diamondCarat}
-            initialRates={goldRates}
-          />
+          {isDiamond ? (
+            <DiamondPrice price={product.price} />
+          ) : (
+            <GoldPriceCalculator
+              weightGrams={product.weight}
+              makingPercent={product.makingChargePercent}
+              available={product.goldPurities}
+              initialRates={goldRates}
+            />
+          )}
 
           {site.whatsapp && (
             <ProductWhatsAppButton name={product.name} slug={product.slug} />

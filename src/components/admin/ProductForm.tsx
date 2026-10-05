@@ -33,6 +33,8 @@ export interface ProductFormValues {
   diamondCarat: string;
   makingChargePercent: string;
   goldPurities: GoldPurity[];
+  /** Fixed price for diamond pieces (₹). */
+  price: string;
   description: string;
   images: string[];
   isNew: boolean;
@@ -56,17 +58,13 @@ function LivePricePreview({
   weight,
   makingPercent,
   selected,
-  diamondCarat,
 }: {
   rates: GoldRates | null;
   weight: number;
   makingPercent: number;
   selected: GoldPurity[];
-  diamondCarat: number;
 }) {
   const shown = karats.filter((k) => selected.includes(k.key));
-  const hasDiamonds = diamondCarat > 0;
-  const diamondRate = rates?.diamondPerCarat ?? null;
   const setOn = rates
     ? formatIstDate(rates.updatedAt)
     : "";
@@ -96,15 +94,6 @@ function LivePricePreview({
                 </p>
               </div>
             ))}
-            {hasDiamonds && (
-              <div className="col-span-2 rounded-xl bg-paper px-3 py-2">
-                <p className="text-xs text-muted">Diamond</p>
-                <p className="font-sans font-semibold tabular-nums tracking-tight text-lg text-ink">
-                  {diamondRate ? inr.format(diamondRate) : "Not set"}
-                  <span className="text-xs text-muted"> /carat</span>
-                </p>
-              </div>
-            )}
           </div>
         ) : (
           <p className="mt-2 text-sm text-amber-800">
@@ -117,13 +106,13 @@ function LivePricePreview({
         )}
       </div>
 
-      {rates && shown.length > 0 && weight > 0 && (!hasDiamonds || diamondRate) && (
+      {rates && shown.length > 0 && weight > 0 && (
         <div className="border-t border-gold/15 pt-3">
           <span className="font-caps text-[10px] tracking-[0.25em] text-muted">Final price</span>
           <div className="mt-2 space-y-2">
             {shown.map((k) => {
               const rate = ratePerGram(rates, k.key);
-              const p = priceBreakup(rate, weight, makingPercent, hasDiamonds ? (diamondRate ?? 0) * diamondCarat : 0);
+              const p = priceBreakup(rate, weight, makingPercent);
               return (
                 <div key={k.key} className="rounded-xl bg-paper px-3 py-2">
                   <div className="flex items-baseline justify-between gap-3">
@@ -134,9 +123,7 @@ function LivePricePreview({
                   </div>
                   <p className="mt-0.5 text-xs text-muted">
                     {weight} g × {inr.format(rate)} = {inr.format(p.goldValue)} + making {makingPercent}% (
-                    {inr.format(p.makingCharges)})
-                    {hasDiamonds ? ` + diamonds ${diamondCarat} ct (${inr.format(p.diamondValue)})` : ""} + GST{" "}
-                    {GOLD_GST_PERCENT}% ({inr.format(p.gst)})
+                    {inr.format(p.makingCharges)}) + GST {GOLD_GST_PERCENT}% ({inr.format(p.gst)})
                   </p>
                 </div>
               );
@@ -238,7 +225,8 @@ export default function ProductForm({
       category: values.category,
       purity: values.purity,
       weight: toNumber(values.weight),
-      goldPurities: values.goldPurities,
+      goldPurities: values.metal === "gold" ? values.goldPurities : [],
+      price: values.metal === "diamond" && values.price.trim() !== "" ? Number(values.price) : null,
       makingChargePercent: values.makingChargePercent.trim() === "" ? 0 : Number(values.makingChargePercent),
       diamondCarat: values.metal === "diamond" && values.diamondCarat.trim() !== "" ? Number(values.diamondCarat) : null,
       description: values.description,
@@ -446,46 +434,48 @@ export default function ProductForm({
           </div>
         </div>
 
-        <div>
-          <span className="font-caps text-[10px] tracking-[0.25em] text-muted">
-            Purity — tick one or both
-          </span>
-          <div className="mt-1.5 grid grid-cols-2 gap-2">
-            {karats.map((k) => {
-              const on = values.goldPurities.includes(k.key);
-              return (
-                <button
-                  key={k.key}
-                  type="button"
-                  role="checkbox"
-                  aria-checked={on}
-                  onClick={() =>
-                    set(
-                      "goldPurities",
-                      on ? values.goldPurities.filter((p) => p !== k.key) : [...values.goldPurities, k.key],
-                    )
-                  }
-                  className={`flex items-center gap-3 rounded-xl border px-4 py-3 text-left transition-colors ${
-                    on ? "border-gold bg-gold text-paper" : "border-gold/30 text-ink hover:border-gold"
-                  }`}
-                >
-                  <span
-                    className={`flex h-5 w-5 shrink-0 items-center justify-center rounded border ${
-                      on ? "border-paper bg-paper text-gold" : "border-gold/50"
+        {values.metal === "gold" && (
+          <div>
+            <span className="font-caps text-[10px] tracking-[0.25em] text-muted">
+              Purity — tick one or both
+            </span>
+            <div className="mt-1.5 grid grid-cols-2 gap-2">
+              {karats.map((k) => {
+                const on = values.goldPurities.includes(k.key);
+                return (
+                  <button
+                    key={k.key}
+                    type="button"
+                    role="checkbox"
+                    aria-checked={on}
+                    onClick={() =>
+                      set(
+                        "goldPurities",
+                        on ? values.goldPurities.filter((p) => p !== k.key) : [...values.goldPurities, k.key],
+                      )
+                    }
+                    className={`flex items-center gap-3 rounded-xl border px-4 py-3 text-left transition-colors ${
+                      on ? "border-gold bg-gold text-paper" : "border-gold/30 text-ink hover:border-gold"
                     }`}
                   >
-                    {on && "✓"}
-                  </span>
-                  <span>
-                    <span className="block font-sans font-semibold tabular-nums tracking-tight text-lg leading-none">{k.key}</span>
-                    <span className={`text-xs ${on ? "text-paper/80" : "text-muted"}`}>{k.hallmark} hallmark</span>
-                  </span>
-                </button>
-              );
-            })}
+                    <span
+                      className={`flex h-5 w-5 shrink-0 items-center justify-center rounded border ${
+                        on ? "border-paper bg-paper text-gold" : "border-gold/50"
+                      }`}
+                    >
+                      {on && "✓"}
+                    </span>
+                    <span>
+                      <span className="block font-sans font-semibold tabular-nums tracking-tight text-lg leading-none">{k.key}</span>
+                      <span className={`text-xs ${on ? "text-paper/80" : "text-muted"}`}>{k.hallmark} hallmark</span>
+                    </span>
+                  </button>
+                );
+              })}
+            </div>
+            {fieldErrors.goldPurities && <p className="mt-1 text-xs text-red-700">{fieldErrors.goldPurities}</p>}
           </div>
-          {fieldErrors.goldPurities && <p className="mt-1 text-xs text-red-700">{fieldErrors.goldPurities}</p>}
-        </div>
+        )}
 
         <div className="grid grid-cols-2 gap-4">
           <Field label="Weight (grams)" error={fieldErrors.weight}>
@@ -500,28 +490,44 @@ export default function ProductForm({
               className={`${inputClass} ${border("weight")}`}
             />
           </Field>
-          <Field label="Making charges (%)" error={fieldErrors.makingChargePercent}>
-            <input
-              type="number"
-              inputMode="decimal"
-              step="0.01"
-              min="0"
-              max="100"
-              value={values.makingChargePercent}
-              onChange={(e) => set("makingChargePercent", e.target.value)}
-              placeholder="e.g. 12"
-              className={`${inputClass} ${border("makingChargePercent")}`}
-            />
-          </Field>
+          {values.metal === "gold" ? (
+            <Field label="Making charges (%)" error={fieldErrors.makingChargePercent}>
+              <input
+                type="number"
+                inputMode="decimal"
+                step="0.01"
+                min="0"
+                max="100"
+                value={values.makingChargePercent}
+                onChange={(e) => set("makingChargePercent", e.target.value)}
+                placeholder="e.g. 12"
+                className={`${inputClass} ${border("makingChargePercent")}`}
+              />
+            </Field>
+          ) : (
+            <Field label="Price (₹)" error={fieldErrors.price}>
+              <input
+                type="number"
+                inputMode="decimal"
+                step="1"
+                min="1"
+                value={values.price}
+                onChange={(e) => set("price", e.target.value)}
+                placeholder="e.g. 85000"
+                className={`${inputClass} ${border("price")}`}
+              />
+            </Field>
+          )}
         </div>
 
-        <LivePricePreview
-          rates={liveRates}
-          weight={Number(values.weight) || 0}
-          makingPercent={Number(values.makingChargePercent) || 0}
-          selected={values.goldPurities}
-          diamondCarat={values.metal === "diamond" ? Number(values.diamondCarat) || 0 : 0}
-        />
+        {values.metal === "gold" && (
+          <LivePricePreview
+            rates={liveRates}
+            weight={Number(values.weight) || 0}
+            makingPercent={Number(values.makingChargePercent) || 0}
+            selected={values.goldPurities}
+          />
+        )}
 
         {values.metal === "diamond" && (
           <Field label="Diamond weight (carat)" error={fieldErrors.diamondCarat} hint="Total carat weight of all diamonds">

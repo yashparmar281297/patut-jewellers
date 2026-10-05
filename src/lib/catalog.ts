@@ -46,6 +46,8 @@ export interface Product {
   isBridal: boolean;
   /** Making charges as a percentage of the gold value. */
   makingChargePercent: number;
+  /** Fixed price in rupees (diamond pieces); gold prices come from the day's rate. */
+  price: number | null;
   /** Gold purities this piece is offered in (gold only). */
   goldPurities: GoldPurity[];
 }

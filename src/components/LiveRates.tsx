@@ -15,9 +15,6 @@ export default async function LiveRates() {
         ...(rates.rate24kPerGram
           ? [{ label: "999 · 24K", unit: "per 10 g", value: rates.rate24kPerGram * 10, tone: "from-[#f3eadd] to-[#dbc6ab]" }]
           : []),
-        ...(rates.diamondPerCarat
-          ? [{ label: "Diamond", unit: "per carat", value: rates.diamondPerCarat, tone: "from-[#f6eff4] to-[#eadde6]" }]
-          : []),
       ]
     : [];
 

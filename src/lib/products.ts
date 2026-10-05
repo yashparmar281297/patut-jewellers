@@ -31,6 +31,7 @@ export function toProduct(row: ProductRow): Product {
     isPublished: row.is_published,
     isBridal: row.is_bridal,
     makingChargePercent: Number(row.making_charge_percent) || 0,
+    price: row.price === null ? null : Number(row.price),
     goldPurities: row.gold_purities.filter((p): p is GoldPurity => (goldPurities as readonly string[]).includes(p)),
   };
 }

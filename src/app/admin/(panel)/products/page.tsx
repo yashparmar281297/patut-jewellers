@@ -6,6 +6,7 @@ import PageHeader from "@/components/admin/PageHeader";
 import StatusToggle from "@/components/admin/StatusToggle";
 import JewelIcon from "@/components/JewelIcon";
 import { getAdminSession } from "@/lib/admin";
+import { inr } from "@/lib/pricing";
 import { categories, getCategory, mediaUrl, metals, type CategorySlug, type MetalSlug } from "@/lib/catalog";
 
 const selectClass =
@@ -21,7 +22,7 @@ export default async function AdminProductsPage(props: PageProps<"/admin/product
   const { supabase } = await getAdminSession();
   let query = supabase
     .from("products")
-    .select("id, slug, name, metal, category, purity, weight, images, is_published, is_new, is_bestseller, updated_at")
+    .select("id, slug, name, metal, category, purity, weight, price, images, is_published, is_new, is_bestseller, updated_at")
     .order("updated_at", { ascending: false });
   if (metals.some((m) => m.slug === metal)) query = query.eq("metal", metal);
   if (categories.some((c) => c.slug === category)) query = query.eq("category", category);
@@ -138,7 +139,9 @@ export default async function AdminProductsPage(props: PageProps<"/admin/product
                       {p.metal === "gold" ? "Gold" : "Diamond"} · {getCategory(p.category)?.name}
                     </td>
                     <td className="text-muted md:px-4 md:py-3">
-                      {p.purity} · {Number(p.weight)} g
+                      {p.metal === "diamond"
+                        ? `${p.price ? inr.format(Number(p.price)) : "No price set"} · ${Number(p.weight)} g`
+                        : `${p.purity} · ${Number(p.weight)} g`}
                     </td>
                     <td className="md:px-4 md:py-3">
                       <StatusToggle id={p.id} value={p.is_published} action={setPublished} />

@@ -21,6 +21,7 @@ export default async function NewProductPage() {
             diamondCarat: "",
             makingChargePercent: "",
             goldPurities: ["22K", "18K"],
+            price: "",
             description: "",
             images: [],
             isNew: true,

@@ -16,7 +16,7 @@ export default async function AdminRatesPage() {
       <PageHeader
         section="Pricing"
         title="Current Day Price"
-        subtitle="Set today's gold and diamond rates — every product price on the website is calculated from these."
+        subtitle="Set today's 22K and 18K gold rates — every gold product price on the website is calculated from these."
         back={{ href: "/admin", label: "Back to Dashboard" }}
       />
       <RatesForm
@@ -26,7 +26,6 @@ export default async function AdminRatesPage() {
           mode: settings?.mode === "live" ? "live" : "manual",
           rate22kPer10g: str(settings?.rate_22k_per_10g),
           rate18kPer10g: str(settings?.rate_18k_per_10g),
-          diamondRatePerCarat: str(settings?.diamond_rate_per_carat),
           livePremiumPer10g: String(settings?.live_premium_per_10g ?? 0),
         }}
       />

@@ -17,8 +17,6 @@ export interface GoldRates {
   rate18kPerGram: number;
   /** Live MCX 24K (999) rate per gram including the store premium; null for manual rates. */
   rate24kPerGram: number | null;
-  /** Diamond rate in rupees per carat, set daily in the admin; null when not set. */
-  diamondPerCarat: number | null;
   source: "live" | "manual";
   updatedAt: string;
 }
@@ -30,7 +28,6 @@ export function ratePerGram(rates: GoldRates, karat: KaratKey) {
 export interface PriceBreakup {
   goldValue: number;
   makingCharges: number;
-  diamondValue: number;
   gst: number;
   total: number;
 }
@@ -38,21 +35,14 @@ export interface PriceBreakup {
 /**
  * Final price = weight × today's gold rate (gold value)
  *             + making charges (a % of the gold value)
- *             + diamond value (carats × today's diamond rate, diamond pieces only)
  *             + 3% GST on all of the above.
  */
-export function priceBreakup(
-  ratePerGramValue: number,
-  weightGrams: number,
-  makingPercent: number,
-  diamondValueRupees = 0,
-): PriceBreakup {
+export function priceBreakup(ratePerGramValue: number, weightGrams: number, makingPercent: number): PriceBreakup {
   // Round each line to whole rupees so the breakup always adds up to the total shown.
   const goldValue = Math.round(ratePerGramValue * weightGrams);
   const makingCharges = Math.round((goldValue * makingPercent) / 100);
-  const diamondValue = Math.round(diamondValueRupees);
-  const gst = Math.round(((goldValue + makingCharges + diamondValue) * GOLD_GST_PERCENT) / 100);
-  return { goldValue, makingCharges, diamondValue, gst, total: goldValue + makingCharges + diamondValue + gst };
+  const gst = Math.round(((goldValue + makingCharges) * GOLD_GST_PERCENT) / 100);
+  return { goldValue, makingCharges, gst, total: goldValue + makingCharges + gst };
 }
 
 /** Rupee formatter that renders identically on the server and in every browser. */

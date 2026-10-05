@@ -12,7 +12,6 @@ interface Props {
     mode: "live" | "manual";
     rate22kPer10g: string;
     rate18kPer10g: string;
-    diamondRatePerCarat: string;
     livePremiumPer10g: string;
   };
   /** When the rates were last saved (ISO), to remind the owner to update them daily. */
@@ -50,7 +49,6 @@ export default function RatesForm({ initial, lastSaved, mcxGold10g }: Props) {
         mode: values.mode,
         rate22kPer10g: r22,
         rate18kPer10g: r18,
-        diamondRatePerCarat: num(values.diamondRatePerCarat),
         livePremiumPer10g: num(values.livePremiumPer10g) ?? 0,
       });
       if (!result.ok) {
@@ -101,20 +99,6 @@ export default function RatesForm({ initial, lastSaved, mcxGold10g }: Props) {
             />
           </Field>
         </div>
-        <Field
-          label="Diamond (₹ per carat)"
-          error={fieldErrors.diamondRatePerCarat}
-          hint="Used for diamond jewellery: diamond carats × this rate is added to the gold price"
-        >
-          <input
-            type="number"
-            step="1"
-            min="1"
-            value={values.diamondRatePerCarat}
-            onChange={(e) => set("diamondRatePerCarat", e.target.value)}
-            className={`${inputClass} ${border("diamondRatePerCarat")} block sm:max-w-[50%]`}
-          />
-        </Field>
 
         <div className="rounded-2xl border border-gold/20 bg-ivory/50 p-4 text-sm">
           <button type="button" onClick={() => setShowAdvanced((v) => !v)} className="text-gold-deep underline underline-offset-4">
@@ -171,8 +155,8 @@ export default function RatesForm({ initial, lastSaved, mcxGold10g }: Props) {
       <section className="rounded-3xl border border-gold/20 bg-paper p-5 sm:p-7">
         <h2 className="font-display text-2xl text-ink">How prices are worked out</h2>
         <p className="mt-3 text-sm leading-relaxed text-muted">
-          Final price = weight × gold rate for the chosen karat + making charges % + diamond value (diamond pieces) +
-          3% GST.
+          Gold price = weight × gold rate for the chosen karat + making charges % + 3% GST. Diamond pieces use the
+          fixed price set on each product.
         </p>
         {r22 && r18 ? (
           <dl className="mt-5 space-y-3 text-sm">

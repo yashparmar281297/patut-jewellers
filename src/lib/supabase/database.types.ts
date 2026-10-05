@@ -38,6 +38,7 @@ export type Database = {
           making_charge_percent: number;
           metal: string;
           name: string;
+          price: number | null;
           purity: string;
           slug: string;
           sort_order: number;
@@ -59,6 +60,7 @@ export type Database = {
           making_charge_percent?: number;
           metal: string;
           name: string;
+          price?: number | null;
           purity?: string;
           slug: string;
           sort_order?: number;
@@ -80,6 +82,7 @@ export type Database = {
           making_charge_percent?: number;
           metal?: string;
           name?: string;
+          price?: number | null;
           purity?: string;
           slug?: string;
           sort_order?: number;
@@ -90,7 +93,6 @@ export type Database = {
       };
       gold_rate_settings: {
         Row: {
-          diamond_rate_per_carat: number | null;
           id: number;
           live_premium_per_10g: number;
           mode: string;
@@ -99,7 +101,6 @@ export type Database = {
           updated_at: string;
         };
         Insert: {
-          diamond_rate_per_carat?: number | null;
           id?: number;
           live_premium_per_10g?: number;
           mode?: string;
@@ -108,7 +109,6 @@ export type Database = {
           updated_at?: string;
         };
         Update: {
-          diamond_rate_per_carat?: number | null;
           id?: number;
           live_premium_per_10g?: number;
           mode?: string;
