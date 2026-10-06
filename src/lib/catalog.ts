@@ -12,7 +12,8 @@ export type CategorySlug =
   | "bracelet"
   | "dholna"
   | "tika"
-  | "nathiya";
+  | "nathiya"
+  | "nose-pin";
 
 export interface Metal {
   slug: MetalSlug;
@@ -84,6 +85,7 @@ export const categories: Category[] = [
   { slug: "dholna", name: "Dholna", blurb: "The traditional dholna, treasured by every bride" },
   { slug: "tika", name: "Tika", blurb: "Maang tikka to crown the bridal look" },
   { slug: "nathiya", name: "Nathiya", blurb: "Nose rings from delicate to grand bridal nath" },
+  { slug: "nose-pin", name: "Nose Pin", blurb: "Dainty studs for everyday sparkle" },
 ];
 
 /** Categories highlighted in the Bridal Edit, in display order. */

@@ -329,6 +329,35 @@ export default function JewelIcon({ category, metal = "gold", className }: Props
         </>
       );
       break;
+
+    case "nose-pin":
+      // Flower stud with its curved pin, seen from the side.
+      art = (
+        <>
+          <path d="M58 58 C58 80 64 92 82 96" {...common} strokeWidth={2} />
+          <circle cx={84} cy={96.5} r={3} fill="currentColor" opacity={0.85} />
+          {Array.from({ length: 6 }).map((_, i) => {
+            const a = (Math.PI * 2 * i) / 6 - Math.PI / 2;
+            const x = 58 + Math.cos(a) * 15;
+            const y = 46 + Math.sin(a) * 15;
+            return (
+              <ellipse
+                key={i}
+                cx={x}
+                cy={y}
+                rx={9}
+                ry={6}
+                transform={`rotate(${(a * 180) / Math.PI} ${x} ${y})`}
+                {...common}
+                fill="#f3eadd"
+              />
+            );
+          })}
+          <circle cx={58} cy={46} r={9} {...common} fill="#f3eadd" />
+          <Stone x={58} y={46} r={5.5} metal={metal} />
+        </>
+      );
+      break;
   }
 
   return (
