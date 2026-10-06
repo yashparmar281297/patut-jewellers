@@ -6,6 +6,11 @@ interface Props {
   className?: string;
 }
 
+// Server (Node) and browsers can differ in the last digit of Math.cos/Math.sin, which breaks
+// hydration of these SVG coordinates; rounding keeps the markup identical everywhere.
+const cos = (a: number) => Math.round(Math.cos(a) * 1e6) / 1e6;
+const sin = (a: number) => Math.round(Math.sin(a) * 1e6) / 1e6;
+
 /** A single stone: a faceted diamond or a polished gold bead. */
 function Stone({ x, y, r, metal }: { x: number; y: number; r: number; metal: MetalSlug }) {
   if (metal === "diamond") {
@@ -155,6 +160,25 @@ export default function JewelIcon({ category, metal = "gold", className }: Props
       );
       break;
 
+    case "kada":
+      // Solid kada with an engraved band, seen at an angle.
+      art = (
+        <>
+          <ellipse cx={60} cy={58} rx={38} ry={24} {...common} strokeWidth={2.4} />
+          <ellipse cx={60} cy={70} rx={38} ry={24} {...common} strokeWidth={2.4} />
+          <path d="M22 58 V70 M98 58 V70" {...common} strokeWidth={2.4} />
+          <ellipse cx={60} cy={58} rx={29} ry={17} {...common} strokeWidth={1} />
+          {Array.from({ length: 11 }).map((_, i) => {
+            const a = Math.PI * (0.08 + (0.84 * i) / 10);
+            const x = 60 - cos(a) * 38;
+            const y = 70 + sin(a) * 24;
+            return <path key={i} d={`M${x} ${y - 9} l2 4 l-2 4 l-2 -4 z`} fill="currentColor" opacity={0.75} />;
+          })}
+          <Stone x={60} y={88} r={3.2} metal={metal} />
+        </>
+      );
+      break;
+
     case "bangles":
       art = (
         <>
@@ -171,7 +195,43 @@ export default function JewelIcon({ category, metal = "gold", className }: Props
       );
       break;
 
-    case "chain":
+    case "mens-chain":
+      // Heavy curb links.
+      art = (
+        <>
+          {Array.from({ length: 6 }).map((_, i) => {
+            const x = 22 + i * 15.5;
+            const y = 86 - i * 13;
+            return (
+              <g key={i}>
+                <rect
+                  x={x - 11}
+                  y={y - 7}
+                  width={22}
+                  height={14}
+                  rx={7}
+                  transform={`rotate(${i % 2 ? -40 : -40} ${x} ${y})`}
+                  {...common}
+                  strokeWidth={3}
+                />
+                <rect
+                  x={x - 5}
+                  y={y - 2.5}
+                  width={10}
+                  height={5}
+                  rx={2.5}
+                  transform={`rotate(-40 ${x} ${y})`}
+                  {...common}
+                  strokeWidth={1}
+                />
+              </g>
+            );
+          })}
+        </>
+      );
+      break;
+
+    case "ladies-chain":
       art = (
         <>
           {Array.from({ length: 7 }).map((_, i) => {
@@ -205,7 +265,7 @@ export default function JewelIcon({ category, metal = "gold", className }: Props
           {Array.from({ length: 13 }).map((_, i) => {
             const t = (i + 1) / 14;
             const x = 20 + 80 * t;
-            const y = 18 + 62 * Math.sin(Math.PI * t) * 0.97;
+            const y = 18 + 62 * sin(Math.PI * t) * 0.97;
             const gold = i % 3 === 1;
             return (
               <circle
@@ -226,7 +286,36 @@ export default function JewelIcon({ category, metal = "gold", className }: Props
       );
       break;
 
-    case "bracelet":
+    case "mens-bracelet":
+      // Chunky curb-link bracelet with a box clasp.
+      art = (
+        <>
+          {Array.from({ length: 14 }).map((_, i) => {
+            const a = (Math.PI * 2 * i) / 14;
+            const x = 60 + cos(a) * 36;
+            const y = 62 + sin(a) * 22;
+            return (
+              <rect
+                key={i}
+                x={x - 7}
+                y={y - 4.5}
+                width={14}
+                height={9}
+                rx={4.5}
+                transform={`rotate(${(a * 180) / Math.PI + 90} ${x} ${y})`}
+                {...common}
+                strokeWidth={2.2}
+                fill="#f3eadd"
+              />
+            );
+          })}
+          <rect x={86} y={52} width={14} height={20} rx={3} {...common} strokeWidth={1.8} fill="#f3eadd" />
+          <path d="M90 58 h6 M90 66 h6" {...common} strokeWidth={0.8} />
+        </>
+      );
+      break;
+
+    case "ladies-bracelet":
       art = (
         <>
           <ellipse cx={60} cy={62} rx={40} ry={26} {...common} strokeWidth={1.2} />
@@ -236,8 +325,8 @@ export default function JewelIcon({ category, metal = "gold", className }: Props
             return (
               <Stone
                 key={i}
-                x={60 + Math.cos(a) * 37}
-                y={62 + Math.sin(a) * 23}
+                x={60 + cos(a) * 37}
+                y={62 + sin(a) * 23}
                 r={i % 3 === 0 ? 3.6 : 2.6}
                 metal={metal}
               />
@@ -255,8 +344,8 @@ export default function JewelIcon({ category, metal = "gold", className }: Props
           <path d="M14 22 C22 46 38 56 48 58 M106 22 C98 46 82 56 72 58" {...common} strokeWidth={0.8} />
           {[0.25, 0.45, 0.65, 0.85].map((t) => (
             <g key={t}>
-              <circle cx={14 + 34 * t} cy={22 + 36 * Math.sin((Math.PI / 2) * t)} r={2.2} fill="#1a1210" />
-              <circle cx={106 - 34 * t} cy={22 + 36 * Math.sin((Math.PI / 2) * t)} r={2.2} fill="#1a1210" />
+              <circle cx={14 + 34 * t} cy={22 + 36 * sin((Math.PI / 2) * t)} r={2.2} fill="#1a1210" />
+              <circle cx={106 - 34 * t} cy={22 + 36 * sin((Math.PI / 2) * t)} r={2.2} fill="#1a1210" />
             </g>
           ))}
           <path d="M34 60 Q60 50 86 60 L86 80 Q60 90 34 80 Z" {...common} fill="#f3eadd" />
@@ -289,7 +378,7 @@ export default function JewelIcon({ category, metal = "gold", className }: Props
           <circle cx={60} cy={72} r={11} {...common} strokeWidth={0.8} />
           {Array.from({ length: 8 }).map((_, i) => {
             const a = (Math.PI * 2 * i) / 8;
-            return <Stone key={i} x={60 + Math.cos(a) * 14} y={72 + Math.sin(a) * 14} r={1.8} metal={metal} />;
+            return <Stone key={i} x={60 + cos(a) * 14} y={72 + sin(a) * 14} r={1.8} metal={metal} />;
           })}
           <Stone x={60} y={72} r={5.5} metal={metal} />
           <path d="M60 89 v4" {...common} />
@@ -311,13 +400,13 @@ export default function JewelIcon({ category, metal = "gold", className }: Props
           <circle cx={103} cy={15} r={3} {...common} />
           {[20, 45, 135, 160].map((deg) => {
             const a = (deg * Math.PI) / 180;
-            return <Stone key={deg} x={58 + Math.cos(a) * 32} y={62 + Math.sin(a) * 32} r={2.8} metal={metal} />;
+            return <Stone key={deg} x={58 + cos(a) * 32} y={62 + sin(a) * 32} r={2.8} metal={metal} />;
           })}
           {/* Centre ornament at the bottom of the ring with hanging pearls */}
           <circle cx={58} cy={94} r={7.5} {...common} fill="#f3eadd" />
           {Array.from({ length: 6 }).map((_, i) => {
             const a = (Math.PI * 2 * i) / 6;
-            return <circle key={i} cx={58 + Math.cos(a) * 5} cy={94 + Math.sin(a) * 5} r={1.3} fill="currentColor" opacity={0.8} />;
+            return <circle key={i} cx={58 + cos(a) * 5} cy={94 + sin(a) * 5} r={1.3} fill="currentColor" opacity={0.8} />;
           })}
           <Stone x={58} y={94} r={2.6} metal={metal} />
           {[50, 58, 66].map((x) => (
@@ -330,6 +419,20 @@ export default function JewelIcon({ category, metal = "gold", className }: Props
       );
       break;
 
+    case "nose-ring":
+      // Simple hoop with a small bead.
+      art = (
+        <>
+          <path d="M60 28 A30 30 0 1 0 84 40" {...common} strokeWidth={2.2} />
+          <circle cx={84} cy={40} r={2.6} fill="currentColor" />
+          <circle cx={60} cy={28} r={2.2} fill="currentColor" />
+          <Stone x={42} y={80} r={4.5} metal={metal} />
+          <path d="M42 85 v6" {...common} strokeWidth={0.8} />
+          <circle cx={42} cy={94} r={2.4} fill="currentColor" opacity={0.85} />
+        </>
+      );
+      break;
+
     case "nose-pin":
       // Flower stud with its curved pin, seen from the side.
       art = (
@@ -338,8 +441,8 @@ export default function JewelIcon({ category, metal = "gold", className }: Props
           <circle cx={84} cy={96.5} r={3} fill="currentColor" opacity={0.85} />
           {Array.from({ length: 6 }).map((_, i) => {
             const a = (Math.PI * 2 * i) / 6 - Math.PI / 2;
-            const x = 58 + Math.cos(a) * 15;
-            const y = 46 + Math.sin(a) * 15;
+            const x = 58 + cos(a) * 15;
+            const y = 46 + sin(a) * 15;
             return (
               <ellipse
                 key={i}

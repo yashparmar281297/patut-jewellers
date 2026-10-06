@@ -7,13 +7,17 @@ export type CategorySlug =
   | "earring"
   | "jhumka"
   | "bangles"
-  | "chain"
+  | "kada"
+  | "mens-chain"
+  | "ladies-chain"
   | "mangalsutra"
-  | "bracelet"
+  | "mens-bracelet"
+  | "ladies-bracelet"
   | "dholna"
   | "tika"
   | "nathiya"
-  | "nose-pin";
+  | "nose-pin"
+  | "nose-ring";
 
 export interface Metal {
   slug: MetalSlug;
@@ -78,14 +82,18 @@ export const categories: Category[] = [
   { slug: "necklace", name: "Necklace", blurb: "Chokers, haars and heirloom sets" },
   { slug: "earring", name: "Earring", blurb: "Studs, drops and everyday sparkle" },
   { slug: "jhumka", name: "Jhumka", blurb: "Temple bells with a graceful sway" },
-  { slug: "bangles", name: "Bangles", blurb: "Kadas and bangles for every ritual" },
-  { slug: "chain", name: "Chain", blurb: "Rope, box and Cuban links" },
+  { slug: "bangles", name: "Bangles", blurb: "Bangles for every ritual and celebration" },
+  { slug: "kada", name: "Kada", blurb: "Bold, solid kadas for men and women" },
+  { slug: "mens-chain", name: "Men’s Chain", blurb: "Rope, box and Cuban links" },
+  { slug: "ladies-chain", name: "Ladies Chain", blurb: "Fine chains for pendants and everyday wear" },
   { slug: "mangalsutra", name: "Mangalsutra", blurb: "Sacred black beads, modern grace" },
-  { slug: "bracelet", name: "Bracelet", blurb: "Tennis, charm and cuff bracelets" },
+  { slug: "mens-bracelet", name: "Men’s Bracelet", blurb: "Curb, Cuban and Nawabi bracelets" },
+  { slug: "ladies-bracelet", name: "Ladies Bracelet", blurb: "Delicate, charm and tennis bracelets" },
   { slug: "dholna", name: "Dholna", blurb: "The traditional dholna, treasured by every bride" },
   { slug: "tika", name: "Tika", blurb: "Maang tikka to crown the bridal look" },
-  { slug: "nathiya", name: "Nathiya", blurb: "Nose rings from delicate to grand bridal nath" },
+  { slug: "nathiya", name: "Nathiya", blurb: "The grand bridal nath" },
   { slug: "nose-pin", name: "Nose Pin", blurb: "Dainty studs for everyday sparkle" },
+  { slug: "nose-ring", name: "Nose Ring", blurb: "Simple, elegant rings for every day" },
 ];
 
 /** Categories highlighted in the Bridal Edit, in display order. */
